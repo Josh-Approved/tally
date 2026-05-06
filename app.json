@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-sqlite",
+      "expo-localization",
+      "expo-font",
+      "expo-asset"
+    ]
   }
 }
