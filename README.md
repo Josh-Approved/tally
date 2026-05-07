@@ -23,7 +23,7 @@ In the meantime, run it locally — see below.
 You'll need [Node.js](https://nodejs.org/) and the Expo Go app on your phone, or an iOS simulator / Android emulator.
 
 ```bash
-git clone https://github.com/jtysonwilliams/tally.git
+git clone https://github.com/Josh-Approved/tally.git
 cd tally
 npm install
 npm start

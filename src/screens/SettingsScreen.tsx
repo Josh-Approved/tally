@@ -92,8 +92,8 @@ export function SettingsScreen() {
         </View>
         <Row label="Buy me a coffee?" onPress={() => Linking.openURL('https://buymeacoffee.com/joshapproved')} />
         <Row label="Send feedback" onPress={() => Linking.openURL('mailto:feedback@joshapproved.com')} />
-        <Row label="Source code" onPress={() => Linking.openURL('https://github.com/jtysonwilliams/tally')} />
-        <Row label="Privacy" onPress={() => Linking.openURL('https://github.com/jtysonwilliams/tally/blob/main/PRIVACY.md')} />
+        <Row label="Source code" onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally')} />
+        <Row label="Privacy" onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally/blob/main/PRIVACY.md')} />
       </ScrollView>
 
       <PickerModal
