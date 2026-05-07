@@ -87,7 +87,7 @@ export function SettingsScreen() {
             Tally — a simple expense tracker. Free. No ads. No tracking. No accounts. Your data lives on your device.
           </Text>
           <Text color="fgMuted" variant="bodySubtle">
-            Made by two people. The code is on GitHub.
+            Made independently. The code is on GitHub.
           </Text>
         </View>
         <Row label="Buy me a coffee?" onPress={() => Linking.openURL('https://buymeacoffee.com/joshapproved')} />
