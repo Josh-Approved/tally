@@ -1,91 +1,83 @@
-// Mirrors josh-approved-factory/skills/josh-approved-design-system/colors_and_type.css.
-// Replace with the factory-synced module once `sync.mjs design-system-native` emits one.
-//
-// Tally accent: dusty teal #3F7D7D — declared in CLAUDE.md § Brand accent.
+/**
+ * Josh Approved color tokens (React Native).
+ *
+ * Canonical mirror of josh-approved-design-system/colors_and_type.css. Synced
+ * into each app at src/theme/colors.ts by `sync.mjs design-system-native`.
+ * Edit values HERE, not per app — drift shows up as a sync diff.
+ *
+ * The one per-app value, the brand accent, is NOT in this file: it lives in
+ * the app-owned ./appAccent.ts (which sync never overwrites). This file
+ * derives the light/dark accent washes from that single declared hex.
+ */
 
-const PALETTE = {
-  ink1000: '#0E0E0F',
-  ink900: '#1A1A1C',
-  ink700: '#3D3D42',
-  ink500: '#6B6B72',
-  ink300: '#9A9AA0',
-  ink200: '#C8C8CC',
-  ink100: '#E5E5E2',
-  ink50: '#F2F2EE',
-  paper: '#FAFAF7',
-  pureWhite: '#FFFFFF',
+import { useColorScheme } from 'react-native';
+import { APP_ACCENT } from './appAccent';
 
-  green700: '#166534',
-  green600: '#1F8A4C',
-  green500: '#2EA866',
-  green100: '#DCFCE7',
+/** #RGB or #RRGGBB -> "rgba(r, g, b, a)". Falls back to the input on a
+ *  malformed hex so a bad per-app accent degrades visibly, not silently. */
+function hexToRgba(hex: string, alpha: number): string {
+  let h = hex.trim().replace(/^#/, '');
+  if (h.length === 3) h = h.split('').map((ch) => ch + ch).join('');
+  if (!/^[0-9a-fA-F]{6}$/.test(h)) return hex;
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
-  amber700: '#92400E',
-  amber600: '#B45309',
-  amber100: '#FEF3C7',
+export const appAccent = APP_ACCENT;
+export const appAccentBg = hexToRgba(APP_ACCENT, 0.14); // light wash
 
-  red700: '#991B1B',
-  red600: '#B91C1C',
-  red100: '#FEE2E2',
-
-  slate700: '#334155',
-  slate600: '#475569',
-  slate100: '#E2E8F0',
-} as const;
-
-const APP_ACCENT = '#3F7D7D';
-const APP_ACCENT_BG = '#E5EDED';
-const APP_ACCENT_DARK = '#7BB0B0';
-const APP_ACCENT_BG_DARK = 'rgba(123, 176, 176, 0.14)';
-
-type ColorMap = {
-  bg: string; bgElevated: string; bgSubtle: string; bgScrim: string;
-  fg: string; fgMuted: string; fgSubtle: string; fgOnInk: string; fgOnAccent: string;
-  hairline: string; hairlineStrong: string;
-  accent: string; accentHover: string; accentBg: string;
-  appAccent: string; appAccentBg: string;
-  success: string; successBg: string;
-  warning: string; warningBg: string;
-  danger: string; dangerBg: string;
-  info: string; infoBg: string;
-  focusRing: string;
-};
-
-export const lightColors: ColorMap = {
-  bg: PALETTE.paper,
-  bgElevated: PALETTE.pureWhite,
-  bgSubtle: PALETTE.ink50,
+// ---------- Light palette (canonical) ----------
+const light = {
+  // Backgrounds
+  bg: '#FAFAF7',           // paper — default background
+  bgElevated: '#FFFFFF',   // pure white — cards on paper
+  bgSubtle: '#F2F2EE',     // ink-50 — subtle fill
   bgScrim: 'rgba(14, 14, 15, 0.5)',
 
-  fg: PALETTE.ink1000,
-  fgMuted: PALETTE.ink500,
-  fgSubtle: PALETTE.ink300,
-  fgOnInk: PALETTE.paper,
-  fgOnAccent: PALETTE.paper,
+  // Foregrounds
+  fg: '#0E0E0F',           // ink-1000 — primary text
+  fgMuted: '#6B6B72',      // ink-500 — secondary text
+  fgSubtle: '#9A9AA0',     // ink-300 — tertiary, captions, disabled
+  fgOnInk: '#FAFAF7',      // text on dark surfaces (e.g. ink CTA)
+  fgOnAccent: '#FAFAF7',   // text on green
 
-  hairline: PALETTE.ink100,
-  hairlineStrong: PALETTE.ink200,
+  // Hairlines (do the work shadows would do — design system rule)
+  hairline: '#E5E5E2',     // ink-100
+  hairlineStrong: '#C8C8CC', // ink-200
 
-  accent: PALETTE.green600,
-  accentHover: PALETTE.green700,
-  accentBg: PALETTE.green100,
+  // Approval green (verified / done / safe — never a CTA bg)
+  accent: '#1F8A4C',
+  accentHover: '#166534',
+  accentBg: '#DCFCE7',
 
-  appAccent: APP_ACCENT,
-  appAccentBg: APP_ACCENT_BG,
+  // Semantic
+  success: '#1F8A4C',
+  successBg: '#DCFCE7',
+  warning: '#B45309',
+  warningBg: '#FEF3C7',
+  danger: '#B91C1C',
+  dangerBg: '#FEE2E2',
+  info: '#475569',
+  infoBg: '#E2E8F0',
 
-  success: PALETTE.green600,
-  successBg: PALETTE.green100,
-  warning: PALETTE.amber600,
-  warningBg: PALETTE.amber100,
-  danger: PALETTE.red600,
-  dangerBg: PALETTE.red100,
-  info: PALETTE.slate600,
-  infoBg: PALETTE.slate100,
+  // Per-app accent (in-app only — never CTA, never replaces approval green)
+  appAccent,
+  appAccentBg,
 
-  focusRing: PALETTE.green600,
+  // Ink primary-button pair — ink-on-paper. The canonical primary CTA color
+  // (used by ReviewModal and any ink button). Distinct from fg/fgOnInk so a
+  // button can't accidentally inherit body-text contrast rules.
+  inkButton: '#0E0E0F',
+  inkButtonText: '#FAFAF7',
+
+  // Focus ring
+  focusRing: '#1F8A4C',
 };
 
-export const darkColors: ColorMap = {
+// ---------- Dark palette ----------
+const dark: typeof light = {
   bg: '#0B0B0C',
   bgElevated: '#131315',
   bgSubtle: '#1A1A1C',
@@ -100,24 +92,42 @@ export const darkColors: ColorMap = {
   hairline: '#26262A',
   hairlineStrong: '#3D3D42',
 
-  accent: PALETTE.green500,
-  accentHover: PALETTE.green600,
+  accent: '#2EA866',          // green-500 lifts in dark
+  accentHover: '#1F8A4C',
   accentBg: 'rgba(46, 168, 102, 0.15)',
 
-  appAccent: APP_ACCENT_DARK,
-  appAccentBg: APP_ACCENT_BG_DARK,
-
-  success: PALETTE.green500,
+  success: '#2EA866',
   successBg: 'rgba(46, 168, 102, 0.15)',
-  warning: PALETTE.amber600,
+  warning: '#B45309',
   warningBg: 'rgba(180, 83, 9, 0.18)',
-  danger: PALETTE.red600,
+  danger: '#B91C1C',
   dangerBg: 'rgba(185, 28, 28, 0.18)',
-  info: PALETTE.slate600,
+  info: '#475569',
   infoBg: 'rgba(71, 85, 105, 0.22)',
 
-  focusRing: PALETTE.green500,
+  appAccent,
+  appAccentBg: hexToRgba(APP_ACCENT, 0.15), // dark wash
+
+  // Ink button inverts in dark: a paper button with dark label so it stays
+  // the highest-contrast surface against the dark background.
+  inkButton: '#F5F5F2',
+  inkButtonText: '#0B0B0C',
+
+  focusRing: '#2EA866',
 };
 
-export type ThemeColors = ColorMap;
-export type ColorToken = keyof ColorMap;
+export type Colors = typeof light;
+
+export const lightColors: Colors = light;
+export const darkColors: Colors = dark;
+
+/**
+ * Colors hook — returns the active palette based on system color scheme.
+ *
+ *   const { c } = useTheme();
+ *   const s = makeStyles(c);
+ */
+export function useTheme(): { c: Colors; isDark: boolean } {
+  const isDark = useColorScheme() === 'dark';
+  return { c: isDark ? dark : light, isDark };
+}
