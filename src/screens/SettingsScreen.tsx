@@ -84,7 +84,7 @@ export function SettingsScreen() {
         <SectionHeader title="About" />
         <View style={{ paddingHorizontal: space.s5, paddingVertical: space.s4, gap: space.s3 }}>
           <Text>
-            Tally — a simple expense tracker. Free. No ads. No tracking. No accounts. Your data lives on your device.
+            Tally — an expense tracker. No paywall. No ads. No tracking. No accounts. Your data stays with you.
           </Text>
           <Text color="fgMuted" variant="bodySubtle">
             Made independently. The code is on GitHub.

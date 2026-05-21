@@ -1,6 +1,6 @@
 # Tally
 
-A simple expense tracker. Free. No ads. No tracking. No accounts. Your data stays on your device.
+An expense tracker. No paywall. No ads. No tracking. No accounts. Your data stays with you.
 
 ## What it does
 
@@ -33,7 +33,7 @@ Then scan the QR code with Expo Go (or press `i` for iOS simulator, `a` for Andr
 
 ## Privacy
 
-Your data stays on your device. There are no accounts, no analytics, no servers. See [PRIVACY.md](PRIVACY.md).
+Your data stays with you. We don't collect any of it — no accounts, no tracking, no analytics. See [PRIVACY.md](PRIVACY.md).
 
 ## License
 

@@ -1,8 +1,8 @@
 # Privacy
 
-Tally runs entirely on your device.
+Your data stays with you. Tally doesn't collect anything about how you use it.
 
-- Your transactions, categories, accounts, and settings are stored locally in a SQLite database on your phone. They are never sent to any server we operate.
+- Your transactions, categories, accounts, and settings are stored in a SQLite database on your phone. They are never sent to any server we operate.
 - No accounts, no sign-in, no analytics, no tracking, no ads.
 - The app makes no network calls except the standard App Store / Play Store review prompt.
 
