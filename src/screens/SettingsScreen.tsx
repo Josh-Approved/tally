@@ -90,7 +90,7 @@ export function SettingsScreen() {
             Made independently. The code is on GitHub.
           </Text>
         </View>
-        <Row label="Buy me a coffee?" onPress={() => Linking.openURL('https://buymeacoffee.com/joshapproved')} />
+        <Row label="Support this app" onPress={() => Linking.openURL('https://buymeacoffee.com/jtysonwilliams')} />
         <Row label="Send feedback" onPress={() => Linking.openURL('mailto:feedback@joshapproved.com')} />
         <Row label="Source code" onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally')} />
         <Row label="Privacy" onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally/blob/main/PRIVACY.md')} />
