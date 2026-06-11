@@ -8,13 +8,13 @@ import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { CategoryIcon, ICON_NAMES } from '../components/CategoryIcon';
 import { Button } from '../components/Button';
-import { useTheme } from '../theme';
+import { useTheme, space, radius } from '../theme';
 import { listCategories, createCategory, updateCategory } from '../data/categories';
 import type { Category, TxKind } from '../data/types';
 
 export function CategoriesScreen() {
   const navigation = useNavigation();
-  const { colors, space, radius } = useTheme();
+  const { c } = useTheme();
 
   const [tab, setTab] = useState<TxKind>('expense');
   const [categories, setCategories] = useState<Category[]>([]);
@@ -49,12 +49,12 @@ export function CategoriesScreen() {
         title="Categories"
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
-            <ArrowLeft size={22} color={colors.fg} strokeWidth={1.5} />
+            <ArrowLeft size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
         right={
           <TopBarButton onPress={openNew}>
-            <Plus size={22} color={colors.fg} strokeWidth={1.5} />
+            <Plus size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
       />
@@ -68,7 +68,7 @@ export function CategoriesScreen() {
               flex: 1,
               paddingVertical: space.s3,
               borderBottomWidth: 2,
-              borderColor: tab === k ? colors.fg : 'transparent',
+              borderColor: tab === k ? c.fg : 'transparent',
               alignItems: 'center',
             }}
           >
@@ -92,7 +92,7 @@ export function CategoriesScreen() {
                 paddingHorizontal: space.s5,
                 paddingVertical: space.s4,
                 gap: space.s4,
-                backgroundColor: pressed ? colors.bgSubtle : 'transparent',
+                backgroundColor: pressed ? c.bgSubtle : 'transparent',
                 opacity: item.hidden ? 0.5 : 1,
               })}
             >
@@ -101,12 +101,12 @@ export function CategoriesScreen() {
                   width: 36,
                   height: 36,
                   borderRadius: 18,
-                  backgroundColor: colors.bgSubtle,
+                  backgroundColor: c.bgSubtle,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <CategoryIcon name={item.icon} color={colors.fg} size={18} />
+                <CategoryIcon name={item.icon} color={c.fg} size={18} />
               </View>
               <Text style={{ flex: 1 }}>{item.name}</Text>
               <Pressable
@@ -117,9 +117,9 @@ export function CategoriesScreen() {
                 hitSlop={8}
               >
                 {item.hidden ? (
-                  <EyeOff size={18} color={colors.fgMuted} strokeWidth={1.5} />
+                  <EyeOff size={18} color={c.fgMuted} strokeWidth={1.5} />
                 ) : (
-                  <Eye size={18} color={colors.fgMuted} strokeWidth={1.5} />
+                  <Eye size={18} color={c.fgMuted} strokeWidth={1.5} />
                 )}
               </Pressable>
             </Pressable>
@@ -160,7 +160,7 @@ function CategoryEditor({
   onClose: () => void;
   onSaved: () => void;
 }) {
-  const { colors, space, radius } = useTheme();
+  const { c } = useTheme();
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('tag');
 
@@ -192,7 +192,7 @@ function CategoryEditor({
           title={editing ? 'Edit category' : 'New category'}
           left={
             <TopBarButton onPress={onClose}>
-              <X size={22} color={colors.fg} strokeWidth={1.5} />
+              <X size={22} color={c.fg} strokeWidth={1.5} />
             </TopBarButton>
           }
         />
@@ -206,17 +206,17 @@ function CategoryEditor({
               value={name}
               onChangeText={setName}
               placeholder={kind === 'expense' ? 'e.g. Coffee' : 'e.g. Bonus'}
-              placeholderTextColor={colors.fgSubtle}
+              placeholderTextColor={c.fgSubtle}
               autoFocus
               style={{
                 borderWidth: 1,
-                borderColor: colors.hairline,
+                borderColor: c.hairline,
                 borderRadius: radius.md,
                 paddingHorizontal: space.s4,
                 paddingVertical: space.s4,
-                color: colors.fg,
+                color: c.fg,
                 fontSize: 16,
-                backgroundColor: colors.bgElevated,
+                backgroundColor: c.bgElevated,
               }}
             />
           </View>
@@ -236,13 +236,13 @@ function CategoryEditor({
                       height: 44,
                       borderRadius: radius.md,
                       borderWidth: 1,
-                      borderColor: selected ? colors.fg : colors.hairline,
-                      backgroundColor: selected ? colors.bgSubtle : colors.bgElevated,
+                      borderColor: selected ? c.fg : c.hairline,
+                      backgroundColor: selected ? c.bgSubtle : c.bgElevated,
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}
                   >
-                    <CategoryIcon name={n} color={colors.fg} size={20} />
+                    <CategoryIcon name={n} color={c.fg} size={20} />
                   </Pressable>
                 );
               })}
@@ -256,7 +256,7 @@ function CategoryEditor({
             paddingTop: space.s3,
             paddingBottom: space.s5,
             borderTopWidth: 1,
-            borderColor: colors.hairline,
+            borderColor: c.hairline,
           }}
         >
           <Button label={editing ? 'Save changes' : 'Add category'} onPress={handleSave} fullWidth />

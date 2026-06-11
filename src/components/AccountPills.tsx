@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, ScrollView } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, radius, space } from '../theme';
 import { Text } from './Text';
 import type { Account } from '../data/types';
 
@@ -15,7 +15,7 @@ export function AccountPills({
   value: AccountScope;
   onChange: (next: AccountScope) => void;
 }) {
-  const { colors, radius, space } = useTheme();
+  const { c } = useTheme();
   const items: { id: AccountScope; name: string }[] = [
     { id: null, name: 'All accounts' },
     ...accounts.map((a) => ({ id: a.id as AccountScope, name: a.name })),
@@ -42,14 +42,14 @@ export function AccountPills({
               paddingVertical: space.s2,
               borderRadius: radius.pill,
               borderWidth: 1,
-              borderColor: selected ? colors.fg : colors.hairline,
-              backgroundColor: selected ? colors.fg : 'transparent',
+              borderColor: selected ? c.fg : c.hairline,
+              backgroundColor: selected ? c.fg : 'transparent',
             }}
           >
             <Text
               variant="bodySubtle"
               weight={selected ? 'medium' : 'regular'}
-              style={{ color: selected ? colors.fgOnInk : colors.fgMuted }}
+              style={{ color: selected ? c.fgOnInk : c.fgMuted }}
             >
               {it.name}
             </Text>

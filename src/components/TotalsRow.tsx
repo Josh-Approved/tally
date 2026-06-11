@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, space } from '../theme';
 import { Text } from './Text';
 import { Hairline } from './Hairline';
 import { formatAmount } from '../lib/money';
@@ -16,17 +16,17 @@ export function TotalsRow({
   netMinor: number;
   currencyCode: string;
 }) {
-  const { colors, space } = useTheme();
+  const { c } = useTheme();
   return (
     <View
       style={{
         flexDirection: 'row',
         paddingHorizontal: space.s5,
         paddingVertical: space.s4,
-        backgroundColor: colors.bgElevated,
+        backgroundColor: c.bgElevated,
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        borderColor: colors.hairline,
+        borderColor: c.hairline,
       }}
     >
       <View style={{ flex: 1, alignItems: 'center', gap: space.s1 }}>
@@ -44,7 +44,7 @@ export function TotalsRow({
         <Text
           mono
           weight="medium"
-          style={{ color: netMinor < 0 ? colors.danger : netMinor > 0 ? colors.success : colors.fg }}
+          style={{ color: netMinor < 0 ? c.danger : netMinor > 0 ? c.success : c.fg }}
         >
           {formatAmount(netMinor, currencyCode, { sign: netMinor > 0 })}
         </Text>

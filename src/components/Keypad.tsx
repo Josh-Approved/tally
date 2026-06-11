@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import { Delete } from 'lucide-react-native';
-import { useTheme } from '../theme';
+import { useTheme, space, radius } from '../theme';
 import { Text } from './Text';
 
 const KEYS: (string | 'backspace')[] = [
@@ -12,7 +12,7 @@ const KEYS: (string | 'backspace')[] = [
 ];
 
 export function Keypad({ onPress }: { onPress: (key: string) => void }) {
-  const { colors, space, radius } = useTheme();
+  const { c } = useTheme();
   return (
     <View style={{ paddingHorizontal: space.s4 }}>
       {[0, 1, 2, 3].map((row) => (
@@ -29,11 +29,11 @@ export function Keypad({ onPress }: { onPress: (key: string) => void }) {
                 borderRadius: radius.md,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: pressed ? colors.bgSubtle : 'transparent',
+                backgroundColor: pressed ? c.bgSubtle : 'transparent',
               })}
             >
               {k === 'backspace' ? (
-                <Delete size={24} color={colors.fg} strokeWidth={1.5} />
+                <Delete size={24} color={c.fg} strokeWidth={1.5} />
               ) : (
                 <Text variant="numericLarge" weight="regular" mono style={{ fontSize: 26 }}>
                   {k}

@@ -13,7 +13,7 @@ import { TotalsRow } from '../components/TotalsRow';
 import { TransactionList } from '../components/TransactionList';
 import { Hairline } from '../components/Hairline';
 import { Text } from '../components/Text';
-import { useTheme } from '../theme';
+import { useTheme, space, target } from '../theme';
 import { Pressable } from 'react-native';
 import { listAccounts } from '../data/accounts';
 import { listCategories } from '../data/categories';
@@ -28,7 +28,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
-  const { colors, space, target } = useTheme();
+  const { c } = useTheme();
 
   const [period, setPeriod] = useState<PeriodKind>('month');
   const [anchor, setAnchor] = useState<Date>(() => new Date());
@@ -90,12 +90,12 @@ export function HomeScreen() {
         title="Tally"
         left={
           <TopBarButton onPress={() => navigation.navigate('Settings')}>
-            <SettingsIcon size={22} color={colors.fg} strokeWidth={1.5} />
+            <SettingsIcon size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
         right={
           <TopBarButton onPress={() => Alert.alert('Search', 'Coming soon.')}>
-            <SearchIcon size={22} color={colors.fg} strokeWidth={1.5} />
+            <SearchIcon size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
       />
@@ -122,9 +122,9 @@ export function HomeScreen() {
           style={{
             paddingHorizontal: space.s5,
             paddingVertical: space.s3,
-            backgroundColor: colors.bgSubtle,
+            backgroundColor: c.bgSubtle,
             borderBottomWidth: 1,
-            borderColor: colors.hairline,
+            borderColor: c.hairline,
           }}
         >
           <Text variant="bodySubtle" color="fgMuted">
@@ -169,8 +169,8 @@ export function HomeScreen() {
           paddingTop: space.s3,
           paddingBottom: space.s5,
           borderTopWidth: 1,
-          borderColor: colors.hairline,
-          backgroundColor: colors.bg,
+          borderColor: c.hairline,
+          backgroundColor: c.bg,
           gap: space.s4,
         }}
       >
@@ -180,7 +180,7 @@ export function HomeScreen() {
             flex: 1,
             height: target.min + 8,
             borderRadius: 999,
-            backgroundColor: colors.fg,
+            backgroundColor: c.fg,
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'row',
@@ -188,8 +188,8 @@ export function HomeScreen() {
             opacity: pressed ? 0.85 : 1,
           })}
         >
-          <Minus size={20} color={colors.fgOnInk} strokeWidth={2} />
-          <Text style={{ color: colors.fgOnInk }} weight="medium">Expense</Text>
+          <Minus size={20} color={c.fgOnInk} strokeWidth={2} />
+          <Text style={{ color: c.fgOnInk }} weight="medium">Expense</Text>
         </Pressable>
         <Pressable
           onPress={() => navigation.navigate('AddTransaction', { kind: 'income' })}
@@ -197,9 +197,9 @@ export function HomeScreen() {
             flex: 1,
             height: target.min + 8,
             borderRadius: 999,
-            backgroundColor: colors.bgElevated,
+            backgroundColor: c.bgElevated,
             borderWidth: 1,
-            borderColor: colors.fg,
+            borderColor: c.fg,
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'row',
@@ -207,7 +207,7 @@ export function HomeScreen() {
             opacity: pressed ? 0.85 : 1,
           })}
         >
-          <Plus size={20} color={colors.fg} strokeWidth={2} />
+          <Plus size={20} color={c.fg} strokeWidth={2} />
           <Text weight="medium">Income</Text>
         </Pressable>
       </View>

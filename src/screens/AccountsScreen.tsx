@@ -7,14 +7,14 @@ import { TopBar, TopBarButton } from '../components/TopBar';
 import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { Button } from '../components/Button';
-import { useTheme } from '../theme';
+import { useTheme, space, radius } from '../theme';
 import { listAccountsWithBalance, createAccount, updateAccount, type AccountWithBalance } from '../data/accounts';
 import { getSettings } from '../data/settings';
 import { formatAmount, parseAmount } from '../lib/money';
 
 export function AccountsScreen() {
   const navigation = useNavigation();
-  const { colors, space, radius } = useTheme();
+  const { c } = useTheme();
 
   const [accounts, setAccounts] = useState<AccountWithBalance[]>([]);
   const [currency, setCurrency] = useState('USD');
@@ -52,12 +52,12 @@ export function AccountsScreen() {
         title="Accounts"
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
-            <ArrowLeft size={22} color={colors.fg} strokeWidth={1.5} />
+            <ArrowLeft size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
         right={
           <TopBarButton onPress={openNew}>
-            <Plus size={22} color={colors.fg} strokeWidth={1.5} />
+            <Plus size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
       />
@@ -76,7 +76,7 @@ export function AccountsScreen() {
                 alignItems: 'center',
                 gap: space.s4,
                 opacity: item.archived ? 0.5 : 1,
-                backgroundColor: pressed ? colors.bgSubtle : 'transparent',
+                backgroundColor: pressed ? c.bgSubtle : 'transparent',
               })}
             >
               <View style={{ flex: 1, gap: 2 }}>
@@ -94,9 +94,9 @@ export function AccountsScreen() {
                 }}
               >
                 {item.archived ? (
-                  <ArchiveRestore size={18} color={colors.fgMuted} strokeWidth={1.5} />
+                  <ArchiveRestore size={18} color={c.fgMuted} strokeWidth={1.5} />
                 ) : (
-                  <Archive size={18} color={colors.fgMuted} strokeWidth={1.5} />
+                  <Archive size={18} color={c.fgMuted} strokeWidth={1.5} />
                 )}
               </Pressable>
             </Pressable>
@@ -137,7 +137,7 @@ function AccountEditor({
   onClose: () => void;
   onSaved: () => void;
 }) {
-  const { colors, space, radius } = useTheme();
+  const { c } = useTheme();
   const [name, setName] = useState('');
   const [startingBalance, setStartingBalance] = useState('');
 
@@ -175,7 +175,7 @@ function AccountEditor({
           title={editing ? 'Edit account' : 'New account'}
           left={
             <TopBarButton onPress={onClose}>
-              <X size={22} color={colors.fg} strokeWidth={1.5} />
+              <X size={22} color={c.fg} strokeWidth={1.5} />
             </TopBarButton>
           }
         />
@@ -189,9 +189,9 @@ function AccountEditor({
               value={name}
               onChangeText={setName}
               placeholder="e.g. Cash, Checking"
-              placeholderTextColor={colors.fgSubtle}
+              placeholderTextColor={c.fgSubtle}
               autoFocus
-              style={inputStyle(colors, radius, space)}
+              style={inputStyle(c, radius, space)}
             />
           </View>
           <View>
@@ -203,8 +203,8 @@ function AccountEditor({
               onChangeText={setStartingBalance}
               keyboardType="decimal-pad"
               placeholder="0"
-              placeholderTextColor={colors.fgSubtle}
-              style={inputStyle(colors, radius, space)}
+              placeholderTextColor={c.fgSubtle}
+              style={inputStyle(c, radius, space)}
             />
             <Text variant="caption" color="fgSubtle" style={{ marginTop: space.s2 }}>
               The balance you have right now. Transactions add to this.
@@ -218,7 +218,7 @@ function AccountEditor({
             paddingTop: space.s3,
             paddingBottom: space.s5,
             borderTopWidth: 1,
-            borderColor: colors.hairline,
+            borderColor: c.hairline,
           }}
         >
           <Button label={editing ? 'Save changes' : 'Add account'} onPress={handleSave} fullWidth />

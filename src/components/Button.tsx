@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, View, type PressableProps, type ViewStyle } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, radius, space, target } from '../theme';
 import { Text } from './Text';
 
 export interface ButtonProps extends Omit<PressableProps, 'style' | 'children'> {
@@ -12,17 +12,17 @@ export interface ButtonProps extends Omit<PressableProps, 'style' | 'children'> 
 }
 
 export function Button({ label, variant = 'primary', icon, fullWidth, style, disabled, ...rest }: ButtonProps) {
-  const { colors, radius, space, target } = useTheme();
+  const { c } = useTheme();
   const bg =
-    variant === 'primary' ? colors.fg :
-    variant === 'danger' ? colors.danger :
-    variant === 'secondary' ? colors.bgElevated :
+    variant === 'primary' ? c.fg :
+    variant === 'danger' ? c.danger :
+    variant === 'secondary' ? c.bgElevated :
     'transparent';
   const fg =
-    variant === 'primary' ? colors.fgOnInk :
-    variant === 'danger' ? colors.fgOnAccent :
-    colors.fg;
-  const border = variant === 'secondary' ? colors.hairline : 'transparent';
+    variant === 'primary' ? c.fgOnInk :
+    variant === 'danger' ? c.fgOnAccent :
+    c.fg;
+  const border = variant === 'secondary' ? c.hairline : 'transparent';
   return (
     <Pressable
       disabled={disabled}
