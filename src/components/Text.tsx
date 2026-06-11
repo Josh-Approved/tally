@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text as RNText, type TextProps as RNTextProps, type TextStyle } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, typography } from '../theme';
 
 type Variant = 'body' | 'bodyMuted' | 'bodySubtle' | 'caption' | 'h1' | 'h2' | 'h3' | 'numeric' | 'numericLarge';
 
@@ -24,15 +24,15 @@ export interface TextProps extends RNTextProps {
 }
 
 export function Text({ variant = 'body', weight, color, mono, style, ...rest }: TextProps) {
-  const { colors, typography } = useTheme();
+  const { c } = useTheme();
   const computedColor =
-    color === 'fgMuted' ? colors.fgMuted :
-    color === 'fgSubtle' ? colors.fgSubtle :
-    color === 'fgOnInk' ? colors.fgOnInk :
-    color === 'danger' ? colors.danger :
-    color === 'success' ? colors.success :
-    color === 'appAccent' ? colors.appAccent :
-    colors.fg;
+    color === 'fgMuted' ? c.fgMuted :
+    color === 'fgSubtle' ? c.fgSubtle :
+    color === 'fgOnInk' ? c.fgOnInk :
+    color === 'danger' ? c.danger :
+    color === 'success' ? c.success :
+    color === 'appAccent' ? c.appAccent :
+    c.fg;
 
   const family = mono
     ? (weight === 'medium' || weight === 'semibold' ? typography.monoEmphasis : typography.mono)

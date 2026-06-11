@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Pressable, View, FlatList } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, space } from '../theme';
 import { Text } from './Text';
 import { Hairline } from './Hairline';
 import { CategoryIcon } from './CategoryIcon';
@@ -37,7 +37,7 @@ export function TransactionList({
   emptyText = 'No transactions yet. Tap + to add one.',
   ListHeaderComponent,
 }: Props) {
-  const { colors, space } = useTheme();
+  const { c } = useTheme();
 
   const sections = useMemo<Section[]>(() => {
     const out: Section[] = [];
@@ -110,7 +110,7 @@ export function TransactionList({
                 paddingHorizontal: space.s5,
                 paddingVertical: space.s4,
                 gap: space.s4,
-                backgroundColor: pressed ? colors.bgSubtle : 'transparent',
+                backgroundColor: pressed ? c.bgSubtle : 'transparent',
               })}
             >
               <View
@@ -118,12 +118,12 @@ export function TransactionList({
                   width: 36,
                   height: 36,
                   borderRadius: 18,
-                  backgroundColor: colors.bgSubtle,
+                  backgroundColor: c.bgSubtle,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <CategoryIcon name={cat?.icon ?? 'circle'} color={colors.fg} size={18} />
+                <CategoryIcon name={cat?.icon ?? 'circle'} color={c.fg} size={18} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
                 <Text>{cat?.name ?? 'Uncategorized'}</Text>
@@ -136,7 +136,7 @@ export function TransactionList({
               <Text
                 mono
                 weight="medium"
-                style={{ color: tx.kind === 'income' ? colors.success : colors.fg }}
+                style={{ color: tx.kind === 'income' ? c.success : c.fg }}
               >
                 {tx.kind === 'income' ? '+' : '−'}
                 {formatAmount(tx.amountMinor, currencyCode)}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
-import { useTheme } from '../theme';
+import { space, target } from '../theme';
 import { Text } from './Text';
 
 export function TopBar({
@@ -12,7 +12,6 @@ export function TopBar({
   left?: React.ReactNode;
   right?: React.ReactNode;
 }) {
-  const { space, target } = useTheme();
   return (
     <View
       style={{
@@ -35,7 +34,6 @@ export function TopBar({
 }
 
 export function TopBarButton({ children, onPress }: { children: React.ReactNode; onPress?: () => void }) {
-  const { target } = useTheme();
   return (
     <Pressable
       onPress={onPress}

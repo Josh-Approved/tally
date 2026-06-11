@@ -35,7 +35,7 @@ function arcPath(cx: number, cy: number, r: number, startDeg: number, endDeg: nu
 }
 
 export function CategoryDonut({ size, segments, totalLabelMinor, currencyCode, centerSubLabel }: Props) {
-  const { colors } = useTheme();
+  const { c } = useTheme();
   const cx = size / 2;
   const cy = size / 2;
   const r = (size - STROKE) / 2;
@@ -55,7 +55,7 @@ export function CategoryDonut({ size, segments, totalLabelMinor, currencyCode, c
           cx={cx}
           cy={cy}
           r={r}
-          stroke={colors.fg}
+          stroke={c.fg}
           strokeWidth={STROKE}
           fill="none"
         />
@@ -71,7 +71,7 @@ export function CategoryDonut({ size, segments, totalLabelMinor, currencyCode, c
           <Path
             key={seg.key}
             d={d}
-            stroke={colors.fg}
+            stroke={c.fg}
             strokeWidth={STROKE}
             fill="none"
             strokeLinecap="butt"
@@ -91,7 +91,7 @@ export function CategoryDonut({ size, segments, totalLabelMinor, currencyCode, c
             cx={cx}
             cy={cy}
             r={r}
-            stroke={colors.bgSubtle}
+            stroke={c.bgSubtle}
             strokeWidth={STROKE}
             fill="none"
           />

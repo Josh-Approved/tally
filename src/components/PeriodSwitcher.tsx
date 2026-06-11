@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, radius, space } from '../theme';
 import { Text } from './Text';
 import type { PeriodKind } from '../lib/period';
 
@@ -12,16 +12,16 @@ const OPTIONS: { value: PeriodKind; label: string }[] = [
 ];
 
 export function PeriodSwitcher({ value, onChange }: { value: PeriodKind; onChange: (v: PeriodKind) => void }) {
-  const { colors, radius, space } = useTheme();
+  const { c } = useTheme();
   return (
     <View
       style={{
         flexDirection: 'row',
         borderWidth: 1,
-        borderColor: colors.hairline,
+        borderColor: c.hairline,
         borderRadius: radius.md,
         overflow: 'hidden',
-        backgroundColor: colors.bgElevated,
+        backgroundColor: c.bgElevated,
       }}
     >
       {OPTIONS.map((o, i) => {
@@ -34,16 +34,16 @@ export function PeriodSwitcher({ value, onChange }: { value: PeriodKind; onChang
               flex: 1,
               paddingVertical: space.s3,
               paddingHorizontal: space.s4,
-              backgroundColor: selected ? colors.fg : 'transparent',
+              backgroundColor: selected ? c.fg : 'transparent',
               borderLeftWidth: i === 0 ? 0 : 1,
-              borderLeftColor: colors.hairline,
+              borderLeftColor: c.hairline,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
             <Text
               weight={selected ? 'medium' : 'regular'}
-              style={{ color: selected ? colors.fgOnInk : colors.fgMuted, fontSize: 14 }}
+              style={{ color: selected ? c.fgOnInk : c.fgMuted, fontSize: 14 }}
             >
               {o.label}
             </Text>

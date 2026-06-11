@@ -7,7 +7,7 @@ import { Screen } from '../components/Screen';
 import { TopBar, TopBarButton } from '../components/TopBar';
 import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
-import { useTheme } from '../theme';
+import { useTheme, space } from '../theme';
 import { getSettings, updateSettings } from '../data/settings';
 import { listAccounts } from '../data/accounts';
 import { listCategories } from '../data/categories';
@@ -25,7 +25,7 @@ const THEME_OPTIONS: { value: ThemePref; label: string }[] = [
 
 export function SettingsScreen() {
   const navigation = useNavigation<Nav>();
-  const { colors, space } = useTheme();
+  const { c } = useTheme();
 
   const [settings, setSettings] = useState<Settings | null>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -63,7 +63,7 @@ export function SettingsScreen() {
         title="Settings"
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
-            <ArrowLeft size={22} color={colors.fg} strokeWidth={1.5} />
+            <ArrowLeft size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
       />
@@ -137,7 +137,7 @@ function labelFor<T extends string>(value: T, options: { value: T; label: string
 }
 
 function SectionHeader({ title }: { title: string }) {
-  const { colors, space } = useTheme();
+  const { c } = useTheme();
   return (
     <View style={{ paddingHorizontal: space.s5, paddingTop: space.s6, paddingBottom: space.s2 }}>
       <Text variant="caption" color="fgMuted" weight="medium" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
@@ -148,7 +148,7 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 function Row({ label, value, onPress }: { label: string; value?: string; onPress?: () => void }) {
-  const { colors, space } = useTheme();
+  const { c } = useTheme();
   return (
     <View>
       <Pressable
@@ -159,12 +159,12 @@ function Row({ label, value, onPress }: { label: string; value?: string; onPress
           flexDirection: 'row',
           alignItems: 'center',
           gap: space.s4,
-          backgroundColor: pressed ? colors.bgSubtle : 'transparent',
+          backgroundColor: pressed ? c.bgSubtle : 'transparent',
         })}
       >
         <Text style={{ flex: 1 }}>{label}</Text>
         {value ? <Text color="fgMuted">{value}</Text> : null}
-        <ChevronRight size={18} color={colors.fgSubtle} strokeWidth={1.5} />
+        <ChevronRight size={18} color={c.fgSubtle} strokeWidth={1.5} />
       </Pressable>
       <Hairline style={{ marginLeft: space.s5 }} />
     </View>
@@ -186,7 +186,7 @@ function PickerModal({
   onSelect: (id: string) => void;
   onClose: () => void;
 }) {
-  const { colors, space } = useTheme();
+  const { c } = useTheme();
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
       <Screen>
@@ -194,7 +194,7 @@ function PickerModal({
           title={title}
           left={
             <TopBarButton onPress={onClose}>
-              <X size={22} color={colors.fg} strokeWidth={1.5} />
+              <X size={22} color={c.fg} strokeWidth={1.5} />
             </TopBarButton>
           }
         />
@@ -215,11 +215,11 @@ function PickerModal({
                     flexDirection: 'row',
                     alignItems: 'center',
                     gap: space.s4,
-                    backgroundColor: pressed ? colors.bgSubtle : 'transparent',
+                    backgroundColor: pressed ? c.bgSubtle : 'transparent',
                   })}
                 >
                   <Text style={{ flex: 1 }}>{o.label}</Text>
-                  {selected ? <Check size={18} color={colors.accent} strokeWidth={2} /> : null}
+                  {selected ? <Check size={18} color={c.accent} strokeWidth={2} /> : null}
                 </Pressable>
                 <Hairline style={{ marginLeft: space.s5 }} />
               </View>

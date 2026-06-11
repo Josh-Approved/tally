@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme';
 
 export function Screen({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
-  const { colors, isDark } = useTheme();
+  const { c, isDark } = useTheme();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={['top', 'left', 'right']}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.bg} />
-      <View style={[{ flex: 1, backgroundColor: colors.bg }, style]}>{children}</View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top', 'left', 'right']}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={c.bg} />
+      <View style={[{ flex: 1, backgroundColor: c.bg }, style]}>{children}</View>
     </SafeAreaView>
   );
 }

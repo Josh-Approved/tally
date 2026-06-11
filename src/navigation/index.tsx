@@ -12,16 +12,16 @@ import { useTheme } from '../theme';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
-  const { colors, isDark } = useTheme();
+  const { c, isDark } = useTheme();
   const navTheme = {
     ...(isDark ? DarkTheme : DefaultTheme),
     colors: {
       ...(isDark ? DarkTheme.colors : DefaultTheme.colors),
-      background: colors.bg,
-      card: colors.bg,
-      text: colors.fg,
-      border: colors.hairline,
-      primary: colors.fg,
+      background: c.bg,
+      card: c.bg,
+      text: c.fg,
+      border: c.hairline,
+      primary: c.fg,
     },
   };
   return (

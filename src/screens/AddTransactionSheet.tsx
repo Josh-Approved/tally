@@ -9,7 +9,7 @@ import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { Keypad } from '../components/Keypad';
 import { CategoryGrid } from '../components/CategoryGrid';
-import { useTheme } from '../theme';
+import { useTheme, space, target, radius } from '../theme';
 import { listCategories } from '../data/categories';
 import { listAccounts } from '../data/accounts';
 import { getSettings } from '../data/settings';
@@ -25,7 +25,7 @@ type Route = RouteProp<RootStackParamList, 'AddTransaction'>;
 export function AddTransactionSheet() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<Route>();
-  const { colors, space, target, radius } = useTheme();
+  const { c } = useTheme();
 
   const [kind, setKind] = useState<TxKind>(route.params.kind);
   const [amountInput, setAmountInput] = useState<string>('');
@@ -134,13 +134,13 @@ export function AddTransactionSheet() {
         title={editingId ? 'Edit transaction' : kind === 'expense' ? 'Expense' : 'Income'}
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
-            <X size={22} color={colors.fg} strokeWidth={1.5} />
+            <X size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
         right={
           editingId ? (
             <TopBarButton onPress={handleDelete}>
-              <Trash2 size={20} color={colors.danger} strokeWidth={1.5} />
+              <Trash2 size={20} color={c.danger} strokeWidth={1.5} />
             </TopBarButton>
           ) : null
         }
@@ -179,24 +179,24 @@ export function AddTransactionSheet() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 borderWidth: 1,
-                borderColor: colors.hairline,
+                borderColor: c.hairline,
                 borderRadius: radius.md,
                 paddingHorizontal: space.s4,
                 paddingVertical: space.s4,
-                backgroundColor: colors.bgElevated,
+                backgroundColor: c.bgElevated,
               }}
             >
               <Text>{selectedAccount?.name ?? 'Choose'}</Text>
-              <ChevronDown size={18} color={colors.fgMuted} strokeWidth={1.5} />
+              <ChevronDown size={18} color={c.fgMuted} strokeWidth={1.5} />
             </Pressable>
             {accountSheetOpen ? (
               <View
                 style={{
                   marginTop: space.s2,
                   borderWidth: 1,
-                  borderColor: colors.hairline,
+                  borderColor: c.hairline,
                   borderRadius: radius.md,
-                  backgroundColor: colors.bgElevated,
+                  backgroundColor: c.bgElevated,
                   overflow: 'hidden',
                 }}
               >
@@ -211,8 +211,8 @@ export function AddTransactionSheet() {
                       paddingHorizontal: space.s4,
                       paddingVertical: space.s4,
                       borderTopWidth: i === 0 ? 0 : 1,
-                      borderColor: colors.hairline,
-                      backgroundColor: a.id === accountId ? colors.bgSubtle : 'transparent',
+                      borderColor: c.hairline,
+                      backgroundColor: a.id === accountId ? c.bgSubtle : 'transparent',
                     }}
                   >
                     <Text>{a.name}</Text>
@@ -230,11 +230,11 @@ export function AddTransactionSheet() {
           <View
             style={{
               borderWidth: 1,
-              borderColor: colors.hairline,
+              borderColor: c.hairline,
               borderRadius: radius.md,
               paddingHorizontal: space.s4,
               paddingVertical: space.s4,
-              backgroundColor: colors.bgElevated,
+              backgroundColor: c.bgElevated,
             }}
           >
             <Text>{formatRowDate(occurredAt)}</Text>
@@ -249,15 +249,15 @@ export function AddTransactionSheet() {
             value={note}
             onChangeText={setNote}
             placeholder="Add a note"
-            placeholderTextColor={colors.fgSubtle}
+            placeholderTextColor={c.fgSubtle}
             style={{
               borderWidth: 1,
-              borderColor: colors.hairline,
+              borderColor: c.hairline,
               borderRadius: radius.md,
               paddingHorizontal: space.s4,
               paddingVertical: space.s4,
-              backgroundColor: colors.bgElevated,
-              color: colors.fg,
+              backgroundColor: c.bgElevated,
+              color: c.fg,
               fontSize: 16,
             }}
           />
@@ -270,8 +270,8 @@ export function AddTransactionSheet() {
           paddingTop: space.s3,
           paddingBottom: space.s5,
           borderTopWidth: 1,
-          borderColor: colors.hairline,
-          backgroundColor: colors.bg,
+          borderColor: c.hairline,
+          backgroundColor: c.bg,
         }}
       >
         <Pressable
@@ -280,13 +280,13 @@ export function AddTransactionSheet() {
           style={({ pressed }) => ({
             height: target.min + 8,
             borderRadius: 999,
-            backgroundColor: canSave ? colors.fg : colors.bgSubtle,
+            backgroundColor: canSave ? c.fg : c.bgSubtle,
             alignItems: 'center',
             justifyContent: 'center',
             opacity: pressed ? 0.85 : 1,
           })}
         >
-          <Text style={{ color: canSave ? colors.fgOnInk : colors.fgSubtle }} weight="medium">
+          <Text style={{ color: canSave ? c.fgOnInk : c.fgSubtle }} weight="medium">
             {editingId ? 'Save changes' : 'Save'}
           </Text>
         </Pressable>
