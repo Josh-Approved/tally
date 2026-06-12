@@ -1,6 +1,8 @@
 import { getDb } from './db';
 import { uuid, nowIso } from '../lib/ids';
 import { defaultCurrencyForDevice } from '../lib/currency';
+import { QA_MODE } from '../qa/qaMode';
+import { seedQaTransactions } from '../qa/fixtures';
 
 interface SeedCategory {
   name: string;
@@ -83,5 +85,11 @@ export async function ensureSeed(): Promise<void> {
       'UPDATE setting SET default_account_id = COALESCE(?, default_account_id), default_category_id = COALESCE(?, default_category_id) WHERE id = 1',
       [defaultAccountId, defaultCategoryId]
     );
+  }
+
+  // QA capture builds boot pre-populated so traversals never type data live
+  // (deterministic, no agent-in-the-loop). Tree-shaken from production.
+  if (QA_MODE) {
+    await seedQaTransactions(db);
   }
 }

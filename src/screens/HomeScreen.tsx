@@ -23,6 +23,8 @@ import { materializeRecurring } from '../data/recurring';
 import { periodRange, shiftPeriod, type PeriodKind } from '../lib/period';
 import type { RootStackParamList } from '../navigation/types';
 import type { Account, Category, Transaction } from '../data/types';
+import { QA_MODE } from '../qa/qaMode';
+import { QA_ANCHOR_MS } from '../qa/fixtures';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -31,7 +33,9 @@ export function HomeScreen() {
   const { c } = useTheme();
 
   const [period, setPeriod] = useState<PeriodKind>('month');
-  const [anchor, setAnchor] = useState<Date>(() => new Date());
+  // Freeze the period anchor under QA so the seeded November 2023 data and the
+  // period label line up deterministically on every capture run. Tree-shaken in prod.
+  const [anchor, setAnchor] = useState<Date>(() => (QA_MODE ? new Date(QA_ANCHOR_MS) : new Date()));
   const [scope, setScope] = useState<AccountScope>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);

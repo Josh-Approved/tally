@@ -1,0 +1,8 @@
+{
+  "$comment": "Selector registry for tally — the ONE place brittle UI strings live. Flows reference @keys, never raw copy. text = Maestro regex (full-match against visible text OR a11y label); testID preferred when an anchor churns. Anchors target the frozen-anchor November 2023 QA seed (src/qa/fixtures.ts).",
+  "anchors": {
+    "home-title":     { "text": "Tally", "note": "TopBar title on HomeScreen — the home waypoint." },
+    "period-label":   { "text": ".*Nov 2023.*", "note": "PeriodHeader month label. The app's monthNames table (src/lib/period.ts) is ABBREVIATED, so a month view renders 'Nov 2023' (not 'November') — locale-independent, and 2023 is the frozen QA anchor, proving the QA seed path is active before the screenshot. Wrapped in .* for the iOS merged-a11y-label (the PeriodSwitcher arrows can fold into one label)." },
+    "spent":          { "text": "Spent", "note": "OUTCOME anchor — the CategoryDonut center sub-label, which only renders when total expense > 0 (i.e. the QA transactions loaded). Dead-center on the home screen, so it is visible on every device cell regardless of font scale / device size, unlike a virtualized transaction row." }
+  }
+}

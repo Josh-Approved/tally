@@ -1,0 +1,13 @@
+{
+  "$comment": "tally screenshot traversal + Tier-2 outcome assertion, copy-free. Source of truth for qa/flows/mobile.yaml (GENERATED — run scripts/qa/compile-flow.mjs; never hand-edit the yaml). The home screen is the device-net key screen: top bar, period header, category donut, totals row, and the transaction list all render from the frozen-anchor November 2023 QA seed (src/qa/fixtures.ts), so it exercises layout / safe-area / dark-mode / font-scale across every device cell. The outcome assertion pins that the seed actually loaded: the donut's center 'Spent' sub-label only renders when total expense > 0, and it is always on-screen (dead-center) on every device, unlike a transaction row which virtualizes below the fold.",
+  "appId": "com.joshapproved.tally",
+  "clearState": true,
+  "diagnosticLaunchShot": true,
+  "settleMs": 8000,
+  "steps": [
+    { "waitFor": "@home-title", "timeout": 30000 },
+    { "waitFor": "@period-label", "timeout": 15000 },
+    { "screenshot": "home" },
+    { "assert": "@spent" }
+  ]
+}

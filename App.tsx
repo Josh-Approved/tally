@@ -7,9 +7,14 @@ import { useAppFonts, useTheme } from './src/theme';
 import { SettingsProvider, useSettings } from './src/state/SettingsProvider';
 import { RootNavigator } from './src/navigation';
 import AnimatedSplash from './src/components/AnimatedSplash';
+import { QA_MODE } from './src/qa/qaMode';
 
 // Hold the native launch screen until the JS splash takes over (no icon blink).
-SplashScreen.preventAutoHideAsync().catch(() => {});
+// Under QA, let it auto-hide so capture builds reach the first real frame
+// immediately (deterministic screenshots; no animated intro). Tree-shaken in prod.
+if (!QA_MODE) {
+  SplashScreen.preventAutoHideAsync().catch(() => {});
+}
 
 function ThemedRoot({ fontsLoaded }: { fontsLoaded: boolean }) {
   const { settings, ready } = useSettings();
@@ -24,7 +29,9 @@ function ThemedRoot({ fontsLoaded }: { fontsLoaded: boolean }) {
   // Ready once fonts AND settings are in. The animated splash overlays until
   // its intro has played and content is ready, then crossfades out.
   const appReady = fontsLoaded && ready;
-  const [splashDone, setSplashDone] = useState(false);
+  // QA capture builds skip the animated splash entirely for a deterministic
+  // first frame.
+  const [splashDone, setSplashDone] = useState(QA_MODE);
   return (
     <>
       {appReady ? <RootNavigator /> : <Loading />}

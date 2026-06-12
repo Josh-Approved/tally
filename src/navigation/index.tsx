@@ -8,6 +8,7 @@ import { SettingsScreen } from '../screens/SettingsScreen';
 import { CategoriesScreen } from '../screens/CategoriesScreen';
 import { AccountsScreen } from '../screens/AccountsScreen';
 import { useTheme } from '../theme';
+import { QA_MODE } from '../qa/qaMode';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,7 +27,7 @@ export function RootNavigator() {
   };
   return (
     <NavigationContainer theme={navTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{ headerShown: false, ...(QA_MODE ? { animation: 'none' } : null) }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen
           name="AddTransaction"

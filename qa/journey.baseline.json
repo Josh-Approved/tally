@@ -1,0 +1,16 @@
+{
+  "anchors": {
+    "home-title": {
+      "text": "Tally",
+      "id": null
+    },
+    "period-label": {
+      "text": "Nov 2023",
+      "id": null
+    },
+    "spent": {
+      "text": "Spent",
+      "id": null
+    }
+  }
+}
