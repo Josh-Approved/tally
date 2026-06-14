@@ -4,6 +4,7 @@ import { useTheme, space } from '../theme';
 import { Text } from './Text';
 import { Hairline } from './Hairline';
 import { formatAmount } from '../lib/money';
+import { t } from '../i18n';
 
 export function TotalsRow({
   incomeMinor,
@@ -30,17 +31,17 @@ export function TotalsRow({
       }}
     >
       <View style={{ flex: 1, alignItems: 'center', gap: space.s1 }}>
-        <Text variant="caption" color="fgMuted">Income</Text>
+        <Text variant="caption" color="fgMuted">{t('totals.income')}</Text>
         <Text mono weight="medium">{formatAmount(incomeMinor, currencyCode)}</Text>
       </View>
       <Hairline vertical />
       <View style={{ flex: 1, alignItems: 'center', gap: space.s1 }}>
-        <Text variant="caption" color="fgMuted">Expenses</Text>
+        <Text variant="caption" color="fgMuted">{t('totals.expenses')}</Text>
         <Text mono weight="medium">{formatAmount(expenseMinor, currencyCode)}</Text>
       </View>
       <Hairline vertical />
       <View style={{ flex: 1, alignItems: 'center', gap: space.s1 }}>
-        <Text variant="caption" color="fgMuted">Net</Text>
+        <Text variant="caption" color="fgMuted">{t('totals.net')}</Text>
         <Text
           mono
           weight="medium"

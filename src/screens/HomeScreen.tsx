@@ -14,6 +14,7 @@ import { TransactionList } from '../components/TransactionList';
 import { Hairline } from '../components/Hairline';
 import { Text } from '../components/Text';
 import { useTheme, space, target } from '../theme';
+import { t } from '../i18n';
 import { Pressable } from 'react-native';
 import { listAccounts } from '../data/accounts';
 import { listCategories } from '../data/categories';
@@ -91,14 +92,14 @@ export function HomeScreen() {
   return (
     <Screen>
       <TopBar
-        title="Tally"
+        title={t('home.title')}
         left={
           <TopBarButton onPress={() => navigation.navigate('Settings')}>
             <SettingsIcon size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
         right={
-          <TopBarButton onPress={() => Alert.alert('Search', 'Coming soon.')}>
+          <TopBarButton onPress={() => Alert.alert(t('home.searchTitle'), t('home.searchComingSoon'))}>
             <SearchIcon size={22} color={c.fg} strokeWidth={1.5} />
           </TopBarButton>
         }
@@ -132,7 +133,9 @@ export function HomeScreen() {
           }}
         >
           <Text variant="bodySubtle" color="fgMuted">
-            Added {recurringNotice} recurring {recurringNotice === 1 ? 'transaction' : 'transactions'}.
+            {recurringNotice === 1
+              ? t('home.recurringAddedOne', { count: recurringNotice })
+              : t('home.recurringAddedOther', { count: recurringNotice })}
           </Text>
         </View>
       ) : null}
@@ -152,7 +155,7 @@ export function HomeScreen() {
                 segments={donut}
                 totalLabelMinor={expense}
                 currencyCode={currency}
-                centerSubLabel={expense > 0 ? 'Spent' : transactions.length === 0 ? 'No transactions yet' : 'No expenses'}
+                centerSubLabel={expense > 0 ? t('home.spent') : transactions.length === 0 ? t('home.donutEmpty') : t('home.noExpenses')}
               />
               <View style={{ height: space.s5 }} />
               <TotalsRow
@@ -193,7 +196,7 @@ export function HomeScreen() {
           })}
         >
           <Minus size={20} color={c.fgOnInk} strokeWidth={2} />
-          <Text style={{ color: c.fgOnInk }} weight="medium">Expense</Text>
+          <Text style={{ color: c.fgOnInk }} weight="medium">{t('home.expense')}</Text>
         </Pressable>
         <Pressable
           onPress={() => navigation.navigate('AddTransaction', { kind: 'income' })}
@@ -212,7 +215,7 @@ export function HomeScreen() {
           })}
         >
           <Plus size={20} color={c.fg} strokeWidth={2} />
-          <Text weight="medium">Income</Text>
+          <Text weight="medium">{t('home.income')}</Text>
         </Pressable>
       </View>
     </Screen>

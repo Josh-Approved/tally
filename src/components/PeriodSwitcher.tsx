@@ -2,14 +2,10 @@ import React from 'react';
 import { Pressable, View } from 'react-native';
 import { useTheme, radius, space } from '../theme';
 import { Text } from './Text';
+import { t } from '../i18n';
 import type { PeriodKind } from '../lib/period';
 
-const OPTIONS: { value: PeriodKind; label: string }[] = [
-  { value: 'day', label: 'Day' },
-  { value: 'week', label: 'Week' },
-  { value: 'month', label: 'Month' },
-  { value: 'year', label: 'Year' },
-];
+const OPTIONS: PeriodKind[] = ['day', 'week', 'month', 'year'];
 
 export function PeriodSwitcher({ value, onChange }: { value: PeriodKind; onChange: (v: PeriodKind) => void }) {
   const { c } = useTheme();
@@ -24,12 +20,12 @@ export function PeriodSwitcher({ value, onChange }: { value: PeriodKind; onChang
         backgroundColor: c.bgElevated,
       }}
     >
-      {OPTIONS.map((o, i) => {
-        const selected = o.value === value;
+      {OPTIONS.map((opt, i) => {
+        const selected = opt === value;
         return (
           <Pressable
-            key={o.value}
-            onPress={() => onChange(o.value)}
+            key={opt}
+            onPress={() => onChange(opt)}
             style={{
               flex: 1,
               paddingVertical: space.s3,
@@ -45,7 +41,7 @@ export function PeriodSwitcher({ value, onChange }: { value: PeriodKind; onChang
               weight={selected ? 'medium' : 'regular'}
               style={{ color: selected ? c.fgOnInk : c.fgMuted, fontSize: 14 }}
             >
-              {o.label}
+              {t(`period.${opt}`)}
             </Text>
           </Pressable>
         );

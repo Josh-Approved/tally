@@ -10,6 +10,7 @@ import { CategoryIcon, ICON_NAMES } from '../components/CategoryIcon';
 import { Button } from '../components/Button';
 import { useTheme, space, radius } from '../theme';
 import { listCategories, createCategory, updateCategory } from '../data/categories';
+import { t } from '../i18n';
 import type { Category, TxKind } from '../data/types';
 
 export function CategoriesScreen() {
@@ -46,7 +47,7 @@ export function CategoriesScreen() {
   return (
     <Screen>
       <TopBar
-        title="Categories"
+        title={t('categories.title')}
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
             <ArrowLeft size={22} color={c.fg} strokeWidth={1.5} />
@@ -73,7 +74,7 @@ export function CategoriesScreen() {
             }}
           >
             <Text weight={tab === k ? 'medium' : 'regular'} color={tab === k ? 'fg' : 'fgMuted'}>
-              {k === 'expense' ? 'Expenses' : 'Income'}
+              {k === 'expense' ? t('categories.expenses') : t('categories.income')}
             </Text>
           </Pressable>
         ))}
@@ -128,7 +129,7 @@ export function CategoriesScreen() {
         )}
         ListEmptyComponent={
           <View style={{ padding: space.s7, alignItems: 'center' }}>
-            <Text color="fgMuted">No categories yet.</Text>
+            <Text color="fgMuted">{t('categories.empty')}</Text>
           </View>
         }
       />
@@ -174,7 +175,7 @@ function CategoryEditor({
   const handleSave = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      Alert.alert('Name required');
+      Alert.alert(t('common.nameRequired'));
       return;
     }
     if (editing) {
@@ -189,7 +190,7 @@ function CategoryEditor({
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
       <Screen>
         <TopBar
-          title={editing ? 'Edit category' : 'New category'}
+          title={editing ? t('categories.editTitle') : t('categories.newTitle')}
           left={
             <TopBarButton onPress={onClose}>
               <X size={22} color={c.fg} strokeWidth={1.5} />
@@ -200,12 +201,12 @@ function CategoryEditor({
         <View style={{ padding: space.s5, gap: space.s5 }}>
           <View>
             <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-              Name
+              {t('common.name')}
             </Text>
             <TextInput
               value={name}
               onChangeText={setName}
-              placeholder={kind === 'expense' ? 'e.g. Coffee' : 'e.g. Bonus'}
+              placeholder={kind === 'expense' ? t('categories.namePlaceholderExpense') : t('categories.namePlaceholderIncome')}
               placeholderTextColor={c.fgSubtle}
               autoFocus
               style={{
@@ -222,7 +223,7 @@ function CategoryEditor({
           </View>
           <View>
             <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-              Icon
+              {t('categories.icon')}
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.s2 }}>
               {ICON_NAMES.map((n) => {
@@ -259,7 +260,7 @@ function CategoryEditor({
             borderColor: c.hairline,
           }}
         >
-          <Button label={editing ? 'Save changes' : 'Add category'} onPress={handleSave} fullWidth />
+          <Button label={editing ? t('common.saveChanges') : t('categories.add')} onPress={handleSave} fullWidth />
         </View>
       </Screen>
     </Modal>

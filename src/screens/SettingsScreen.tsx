@@ -7,21 +7,17 @@ import { Screen } from '../components/Screen';
 import { TopBar, TopBarButton } from '../components/TopBar';
 import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
-import { useTheme, space } from '../theme';
+import { LanguageSetting } from '../components/LanguageSetting';
+import { useTheme, space, AppearanceToggle } from '../theme';
+import { t } from '../i18n';
 import { getSettings, updateSettings } from '../data/settings';
 import { listAccounts } from '../data/accounts';
 import { listCategories } from '../data/categories';
 import { SUPPORTED_CURRENCIES } from '../lib/currency';
 import type { RootStackParamList } from '../navigation/types';
-import type { Account, Category, Settings, ThemePref } from '../data/types';
+import type { Account, Category, Settings } from '../data/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
-
-const THEME_OPTIONS: { value: ThemePref; label: string }[] = [
-  { value: 'system', label: 'System' },
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-];
 
 export function SettingsScreen() {
   const navigation = useNavigation<Nav>();
@@ -30,7 +26,7 @@ export function SettingsScreen() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [picker, setPicker] = useState<null | 'currency' | 'theme' | 'defaultAccount' | 'defaultCategory'>(null);
+  const [picker, setPicker] = useState<null | 'currency' | 'defaultAccount' | 'defaultCategory'>(null);
 
   const reload = useCallback(async () => {
     const [s, accs, cats] = await Promise.all([getSettings(), listAccounts(), listCategories({ includeHidden: false })]);
@@ -54,13 +50,13 @@ export function SettingsScreen() {
     return <Screen><View /></Screen>;
   }
 
-  const defaultAccountName = accounts.find((a) => a.id === settings.defaultAccountId)?.name ?? 'None';
-  const defaultCategoryName = categories.find((c) => c.id === settings.defaultCategoryId)?.name ?? 'None';
+  const defaultAccountName = accounts.find((a) => a.id === settings.defaultAccountId)?.name ?? t('common.none');
+  const defaultCategoryName = categories.find((c) => c.id === settings.defaultCategoryId)?.name ?? t('common.none');
 
   return (
     <Screen>
       <TopBar
-        title="Settings"
+        title={t('settings.title')}
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
             <ArrowLeft size={22} color={c.fg} strokeWidth={1.5} />
@@ -69,51 +65,46 @@ export function SettingsScreen() {
       />
       <Hairline />
       <ScrollView contentContainerStyle={{ paddingBottom: space.s8 }}>
-        <SectionHeader title="General" />
-        <Row label="Currency" value={settings.currencyCode} onPress={() => setPicker('currency')} />
-        <Row label="Theme" value={labelFor(settings.theme, THEME_OPTIONS)} onPress={() => setPicker('theme')} />
+        <SectionHeader title={t('settings.appearance')} />
+        <AppearanceToggle style={{ paddingHorizontal: space.s5, paddingBottom: space.s2 }} />
 
-        <SectionHeader title="Defaults" />
-        <Row label="Default account" value={defaultAccountName} onPress={() => setPicker('defaultAccount')} />
-        <Row label="Default category" value={defaultCategoryName} onPress={() => setPicker('defaultCategory')} />
+        <SectionHeader title={t('settings.language')} />
+        <LanguageSetting />
 
-        <SectionHeader title="Library" />
-        <Row label="Categories" onPress={() => navigation.navigate('Categories')} />
-        <Row label="Accounts" onPress={() => navigation.navigate('Accounts')} />
+        <SectionHeader title={t('settings.general')} />
+        <Row label={t('settings.currency')} value={settings.currencyCode} onPress={() => setPicker('currency')} />
 
-        <SectionHeader title="About" />
+        <SectionHeader title={t('settings.defaults')} />
+        <Row label={t('settings.defaultAccount')} value={defaultAccountName} onPress={() => setPicker('defaultAccount')} />
+        <Row label={t('settings.defaultCategory')} value={defaultCategoryName} onPress={() => setPicker('defaultCategory')} />
+
+        <SectionHeader title={t('settings.library')} />
+        <Row label={t('settings.categories')} onPress={() => navigation.navigate('Categories')} />
+        <Row label={t('settings.accounts')} onPress={() => navigation.navigate('Accounts')} />
+
+        <SectionHeader title={t('settings.about')} />
         <View style={{ paddingHorizontal: space.s5, paddingVertical: space.s4, gap: space.s3 }}>
-          <Text>
-            Tally — an expense tracker. No paywall. No ads. No tracking. No accounts. Your data stays with you.
-          </Text>
+          <Text>{t('about.blurb')}</Text>
           <Text color="fgMuted" variant="bodySubtle">
-            Made independently. The code is on GitHub.
+            {t('about.madeIndependently')}
           </Text>
         </View>
-        <Row label="Support this app" onPress={() => Linking.openURL('https://buymeacoffee.com/jtysonwilliams')} />
-        <Row label="Send feedback" onPress={() => Linking.openURL('mailto:feedback@joshapproved.com')} />
-        <Row label="Source code" onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally')} />
-        <Row label="Privacy" onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally/blob/main/PRIVACY.md')} />
+        <Row label={t('about.support')} onPress={() => Linking.openURL('https://buymeacoffee.com/jtysonwilliams')} />
+        <Row label={t('about.feedback')} onPress={() => Linking.openURL('mailto:feedback@joshapproved.com')} />
+        <Row label={t('about.source')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally')} />
+        <Row label={t('about.privacy')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally/blob/main/PRIVACY.md')} />
       </ScrollView>
 
       <PickerModal
-        title="Currency"
+        title={t('settings.currency')}
         visible={picker === 'currency'}
         onClose={() => setPicker(null)}
-        options={SUPPORTED_CURRENCIES.map((c) => ({ id: c, label: c }))}
+        options={SUPPORTED_CURRENCIES.map((cur) => ({ id: cur, label: cur }))}
         selectedId={settings.currencyCode}
         onSelect={(v) => apply({ currencyCode: v })}
       />
       <PickerModal
-        title="Theme"
-        visible={picker === 'theme'}
-        onClose={() => setPicker(null)}
-        options={THEME_OPTIONS.map((o) => ({ id: o.value, label: o.label }))}
-        selectedId={settings.theme}
-        onSelect={(v) => apply({ theme: v as ThemePref })}
-      />
-      <PickerModal
-        title="Default account"
+        title={t('settings.defaultAccount')}
         visible={picker === 'defaultAccount'}
         onClose={() => setPicker(null)}
         options={accounts.map((a) => ({ id: a.id, label: a.name }))}
@@ -121,10 +112,10 @@ export function SettingsScreen() {
         onSelect={(v) => apply({ defaultAccountId: v })}
       />
       <PickerModal
-        title="Default category"
+        title={t('settings.defaultCategory')}
         visible={picker === 'defaultCategory'}
         onClose={() => setPicker(null)}
-        options={categories.filter((c) => c.kind === 'expense').map((c) => ({ id: c.id, label: c.name }))}
+        options={categories.filter((cat) => cat.kind === 'expense').map((cat) => ({ id: cat.id, label: cat.name }))}
         selectedId={settings.defaultCategoryId}
         onSelect={(v) => apply({ defaultCategoryId: v })}
       />
@@ -132,12 +123,7 @@ export function SettingsScreen() {
   );
 }
 
-function labelFor<T extends string>(value: T, options: { value: T; label: string }[]): string {
-  return options.find((o) => o.value === value)?.label ?? value;
-}
-
 function SectionHeader({ title }: { title: string }) {
-  const { c } = useTheme();
   return (
     <View style={{ paddingHorizontal: space.s5, paddingTop: space.s6, paddingBottom: space.s2 }}>
       <Text variant="caption" color="fgMuted" weight="medium" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
