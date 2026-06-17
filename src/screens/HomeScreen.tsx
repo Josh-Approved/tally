@@ -195,8 +195,8 @@ export function HomeScreen() {
             opacity: pressed ? 0.85 : 1,
           })}
         >
-          <Minus size={20} color={c.fgOnInk} strokeWidth={2} />
-          <Text style={{ color: c.fgOnInk }} weight="medium">{t('home.expense')}</Text>
+          <Minus size={20} color={c.inkButtonText} strokeWidth={2} />
+          <Text style={{ color: c.inkButtonText }} weight="medium">{t('home.expense')}</Text>
         </Pressable>
         <Pressable
           onPress={() => navigation.navigate('AddTransaction', { kind: 'income' })}

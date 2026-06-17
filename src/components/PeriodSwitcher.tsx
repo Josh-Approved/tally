@@ -39,7 +39,7 @@ export function PeriodSwitcher({ value, onChange }: { value: PeriodKind; onChang
           >
             <Text
               weight={selected ? 'medium' : 'regular'}
-              style={{ color: selected ? c.fgOnInk : c.fgMuted, fontSize: 14 }}
+              style={{ color: selected ? c.inkButtonText : c.fgMuted, fontSize: 14 }}
             >
               {t(`period.${opt}`)}
             </Text>

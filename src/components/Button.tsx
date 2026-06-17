@@ -19,7 +19,7 @@ export function Button({ label, variant = 'primary', icon, fullWidth, style, dis
     variant === 'secondary' ? c.bgElevated :
     'transparent';
   const fg =
-    variant === 'primary' ? c.fgOnInk :
+    variant === 'primary' ? c.inkButtonText :
     variant === 'danger' ? c.fgOnAccent :
     c.fg;
   const border = variant === 'secondary' ? c.hairline : 'transparent';

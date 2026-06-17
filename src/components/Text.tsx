@@ -28,7 +28,7 @@ export function Text({ variant = 'body', weight, color, mono, style, ...rest }: 
   const computedColor =
     color === 'fgMuted' ? c.fgMuted :
     color === 'fgSubtle' ? c.fgSubtle :
-    color === 'fgOnInk' ? c.fgOnInk :
+    color === 'fgOnInk' ? c.inkButtonText :
     color === 'danger' ? c.danger :
     color === 'success' ? c.success :
     color === 'appAccent' ? c.appAccent :

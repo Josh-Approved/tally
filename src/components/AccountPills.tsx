@@ -50,7 +50,7 @@ export function AccountPills({
             <Text
               variant="bodySubtle"
               weight={selected ? 'medium' : 'regular'}
-              style={{ color: selected ? c.fgOnInk : c.fgMuted }}
+              style={{ color: selected ? c.inkButtonText : c.fgMuted }}
             >
               {it.name}
             </Text>

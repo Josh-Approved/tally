@@ -287,7 +287,7 @@ export function AddTransactionSheet() {
             opacity: pressed ? 0.85 : 1,
           })}
         >
-          <Text style={{ color: canSave ? c.fgOnInk : c.fgSubtle }} weight="medium">
+          <Text style={{ color: canSave ? c.inkButtonText : c.fgSubtle }} weight="medium">
             {editingId ? t('common.saveChanges') : t('common.save')}
           </Text>
         </Pressable>
