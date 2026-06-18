@@ -6,6 +6,7 @@ import { Hairline } from './Hairline';
 import { CategoryIcon } from './CategoryIcon';
 import { formatAmount } from '../lib/money';
 import { formatRowDate } from '../lib/period';
+import { t } from '../i18n';
 import type { Transaction, Category, Account } from '../data/types';
 
 interface Props {
@@ -34,7 +35,7 @@ export function TransactionList({
   currencyCode,
   showAccount = false,
   onPressRow,
-  emptyText = 'No transactions yet. Tap + to add one.',
+  emptyText,
   ListHeaderComponent,
 }: Props) {
   const { c } = useTheme();
@@ -64,7 +65,7 @@ export function TransactionList({
       <View>
         {ListHeaderComponent}
         <View style={{ padding: space.s7, alignItems: 'center' }}>
-          <Text color="fgMuted">{emptyText}</Text>
+          <Text color="fgMuted">{emptyText ?? t('tx.listEmpty')}</Text>
         </View>
       </View>
     );
@@ -126,7 +127,7 @@ export function TransactionList({
                 <CategoryIcon name={cat?.icon ?? 'circle'} color={c.fg} size={18} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
-                <Text>{cat?.name ?? 'Uncategorized'}</Text>
+                <Text>{cat?.name ?? t('tx.uncategorized')}</Text>
                 {tx.note || (showAccount && acc) ? (
                   <Text variant="bodySubtle" color="fgMuted" numberOfLines={1}>
                     {[tx.note, showAccount ? acc?.name : null].filter(Boolean).join(' · ')}

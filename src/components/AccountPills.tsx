@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, ScrollView } from 'react-native';
 import { useTheme, radius, space } from '../theme';
 import { Text } from './Text';
+import { t } from '../i18n';
 import type { Account } from '../data/types';
 
 export type AccountScope = string | null; // null = all accounts
@@ -17,7 +18,7 @@ export function AccountPills({
 }) {
   const { c } = useTheme();
   const items: { id: AccountScope; name: string }[] = [
-    { id: null, name: 'All accounts' },
+    { id: null, name: t('home.allAccounts') },
     ...accounts.map((a) => ({ id: a.id as AccountScope, name: a.name })),
   ];
 
@@ -49,7 +50,7 @@ export function AccountPills({
             <Text
               variant="bodySubtle"
               weight={selected ? 'medium' : 'regular'}
-              style={{ color: selected ? c.fgOnInk : c.fgMuted }}
+              style={{ color: selected ? c.inkButtonText : c.fgMuted }}
             >
               {it.name}
             </Text>

@@ -11,6 +11,7 @@ import { useTheme, space, radius } from '../theme';
 import { listAccountsWithBalance, createAccount, updateAccount, type AccountWithBalance } from '../data/accounts';
 import { getSettings } from '../data/settings';
 import { formatAmount, parseAmount } from '../lib/money';
+import { t } from '../i18n';
 
 export function AccountsScreen() {
   const navigation = useNavigation();
@@ -49,7 +50,7 @@ export function AccountsScreen() {
   return (
     <Screen>
       <TopBar
-        title="Accounts"
+        title={t('accounts.title')}
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
             <ArrowLeft size={22} color={c.fg} strokeWidth={1.5} />
@@ -82,7 +83,7 @@ export function AccountsScreen() {
               <View style={{ flex: 1, gap: 2 }}>
                 <Text>{item.name}</Text>
                 <Text variant="bodySubtle" color="fgMuted">
-                  {item.archived ? 'Archived · ' : ''}
+                  {item.archived ? t('accounts.archivedPrefix') : ''}
                   {formatAmount(item.balanceMinor, currency, { sign: item.balanceMinor > 0 })}
                 </Text>
               </View>
@@ -105,7 +106,7 @@ export function AccountsScreen() {
         )}
         ListEmptyComponent={
           <View style={{ padding: space.s7, alignItems: 'center' }}>
-            <Text color="fgMuted">No accounts yet.</Text>
+            <Text color="fgMuted">{t('accounts.empty')}</Text>
           </View>
         }
       />
@@ -156,7 +157,7 @@ function AccountEditor({
   const handleSave = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      Alert.alert('Name required');
+      Alert.alert(t('common.nameRequired'));
       return;
     }
     const startMinor = startingBalance.trim() === '' ? 0 : (parseAmount(startingBalance, currency) ?? 0);
@@ -172,7 +173,7 @@ function AccountEditor({
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
       <Screen>
         <TopBar
-          title={editing ? 'Edit account' : 'New account'}
+          title={editing ? t('accounts.editTitle') : t('accounts.newTitle')}
           left={
             <TopBarButton onPress={onClose}>
               <X size={22} color={c.fg} strokeWidth={1.5} />
@@ -183,12 +184,12 @@ function AccountEditor({
         <View style={{ padding: space.s5, gap: space.s5 }}>
           <View>
             <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-              Name
+              {t('common.name')}
             </Text>
             <TextInput
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Cash, Checking"
+              placeholder={t('accounts.namePlaceholder')}
               placeholderTextColor={c.fgSubtle}
               autoFocus
               style={inputStyle(c, radius, space)}
@@ -196,18 +197,18 @@ function AccountEditor({
           </View>
           <View>
             <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-              Starting balance
+              {t('accounts.startingBalance')}
             </Text>
             <TextInput
               value={startingBalance}
               onChangeText={setStartingBalance}
               keyboardType="decimal-pad"
-              placeholder="0"
+              placeholder={t('accounts.startingBalancePlaceholder')}
               placeholderTextColor={c.fgSubtle}
               style={inputStyle(c, radius, space)}
             />
             <Text variant="caption" color="fgSubtle" style={{ marginTop: space.s2 }}>
-              The balance you have right now. Transactions add to this.
+              {t('accounts.startingBalanceHint')}
             </Text>
           </View>
         </View>
@@ -221,7 +222,7 @@ function AccountEditor({
             borderColor: c.hairline,
           }}
         >
-          <Button label={editing ? 'Save changes' : 'Add account'} onPress={handleSave} fullWidth />
+          <Button label={editing ? t('common.saveChanges') : t('accounts.add')} onPress={handleSave} fullWidth />
         </View>
       </Screen>
     </Modal>

@@ -15,6 +15,7 @@ import { listAccounts } from '../data/accounts';
 import { getSettings } from '../data/settings';
 import { createTransaction, deleteTransaction, listTransactions, updateTransaction } from '../data/transactions';
 import { todayIso, formatRowDate } from '../lib/period';
+import { t } from '../i18n';
 import { decimalsForCurrency, formatAmount, parseAmount, minorPerUnit } from '../lib/money';
 import type { RootStackParamList } from '../navigation/types';
 import type { Account, Category, TxKind } from '../data/types';
@@ -113,10 +114,10 @@ export function AddTransactionSheet() {
 
   const handleDelete = () => {
     if (!editingId) return;
-    Alert.alert('Delete transaction?', 'This can\'t be undone.', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('tx.deleteTitle'), t('tx.deleteMessage'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Delete',
+        text: t('common.delete'),
         style: 'destructive',
         onPress: async () => {
           await deleteTransaction(editingId);
@@ -131,7 +132,7 @@ export function AddTransactionSheet() {
   return (
     <Screen>
       <TopBar
-        title={editingId ? 'Edit transaction' : kind === 'expense' ? 'Expense' : 'Income'}
+        title={editingId ? t('tx.editTitle') : kind === 'expense' ? t('common.expense') : t('common.income')}
         left={
           <TopBarButton onPress={() => navigation.goBack()}>
             <X size={22} color={c.fg} strokeWidth={1.5} />
@@ -152,7 +153,7 @@ export function AddTransactionSheet() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={{ alignItems: 'center', paddingVertical: space.s7, paddingHorizontal: space.s5 }}>
-          <Text variant="caption" color="fgMuted">{kind === 'expense' ? 'Spent' : 'Received'}</Text>
+          <Text variant="caption" color="fgMuted">{kind === 'expense' ? t('tx.spent') : t('tx.received')}</Text>
           <Text mono weight="semibold" style={{ fontSize: 44, lineHeight: 52, marginTop: space.s2 }}>
             {kind === 'expense' ? '−' : '+'}{formattedAmount}
           </Text>
@@ -162,7 +163,7 @@ export function AddTransactionSheet() {
 
         <View style={{ paddingHorizontal: space.s5, paddingTop: space.s5 }}>
           <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-            Category
+            {t('tx.category')}
           </Text>
         </View>
         <CategoryGrid categories={visibleCategories} selectedId={categoryId} onSelect={setCategoryId} />
@@ -170,7 +171,7 @@ export function AddTransactionSheet() {
         {accounts.length > 1 ? (
           <View style={{ paddingHorizontal: space.s5, paddingTop: space.s5 }}>
             <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-              Account
+              {t('tx.account')}
             </Text>
             <Pressable
               onPress={() => setAccountSheetOpen((s) => !s)}
@@ -186,7 +187,7 @@ export function AddTransactionSheet() {
                 backgroundColor: c.bgElevated,
               }}
             >
-              <Text>{selectedAccount?.name ?? 'Choose'}</Text>
+              <Text>{selectedAccount?.name ?? t('common.choose')}</Text>
               <ChevronDown size={18} color={c.fgMuted} strokeWidth={1.5} />
             </Pressable>
             {accountSheetOpen ? (
@@ -225,7 +226,7 @@ export function AddTransactionSheet() {
 
         <View style={{ paddingHorizontal: space.s5, paddingTop: space.s5 }}>
           <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-            Date
+            {t('tx.date')}
           </Text>
           <View
             style={{
@@ -243,12 +244,12 @@ export function AddTransactionSheet() {
 
         <View style={{ paddingHorizontal: space.s5, paddingTop: space.s5 }}>
           <Text variant="caption" color="fgMuted" weight="medium" style={{ marginBottom: space.s3 }}>
-            Note (optional)
+            {t('tx.noteOptional')}
           </Text>
           <TextInput
             value={note}
             onChangeText={setNote}
-            placeholder="Add a note"
+            placeholder={t('tx.notePlaceholder')}
             placeholderTextColor={c.fgSubtle}
             style={{
               borderWidth: 1,
@@ -286,8 +287,8 @@ export function AddTransactionSheet() {
             opacity: pressed ? 0.85 : 1,
           })}
         >
-          <Text style={{ color: canSave ? c.fgOnInk : c.fgSubtle }} weight="medium">
-            {editingId ? 'Save changes' : 'Save'}
+          <Text style={{ color: canSave ? c.inkButtonText : c.fgSubtle }} weight="medium">
+            {editingId ? t('common.saveChanges') : t('common.save')}
           </Text>
         </Pressable>
       </View>
