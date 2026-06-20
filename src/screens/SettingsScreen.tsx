@@ -8,6 +8,9 @@ import { TopBar, TopBarButton } from '../components/TopBar';
 import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { LanguageSetting } from '../components/LanguageSetting';
+import TipJarSheet from '../components/TipJarSheet';
+import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
+import { TIP_JAR_ENABLED } from '../lib/links';
 import { useTheme, space, AppearanceToggle } from '../theme';
 import { t } from '../i18n';
 import { getSettings, updateSettings } from '../data/settings';
@@ -27,6 +30,7 @@ export function SettingsScreen() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [picker, setPicker] = useState<null | 'currency' | 'defaultAccount' | 'defaultCategory'>(null);
+  const [tipVisible, setTipVisible] = useState(false);
 
   const reload = useCallback(async () => {
     const [s, accs, cats] = await Promise.all([getSettings(), listAccounts(), listCategories({ includeHidden: false })]);
@@ -89,11 +93,19 @@ export function SettingsScreen() {
             {t('about.madeIndependently')}
           </Text>
         </View>
-        <Row label={t('about.support')} onPress={() => Linking.openURL('https://buymeacoffee.com/jtysonwilliams')} />
+        {TIP_JAR_ENABLED && <Row label={t('about.support')} onPress={() => setTipVisible(true)} />}
         <Row label={t('about.feedback')} onPress={() => Linking.openURL('mailto:feedback@joshapproved.com')} />
         <Row label={t('about.source')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally')} />
         <Row label={t('about.privacy')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally/blob/main/PRIVACY.md')} />
       </ScrollView>
+
+      {tipVisible && (
+        <TipJarSheet
+          visible
+          onDismiss={() => setTipVisible(false)}
+          productIds={TIP_PRODUCT_IDS}
+        />
+      )}
 
       <PickerModal
         title={t('settings.currency')}

@@ -60,6 +60,16 @@ export const SHELL_STRINGS = {
     body: "{app} has no ads and no subscriptions — it's supported by the people who use it. If it's earned a place in your day, your support keeps it going.",
     supportA11y: 'Support this app, opens in your browser',
   },
+  // Tip jar (TipJarSheet — the IAP support surface). The dismiss/done labels
+  // reuse common.maybeLater / common.done. Locked copy (canon § Tip jar).
+  tip: {
+    title: 'Support Josh Approved',
+    body: "Everything's free and stays free — no ads, no tracking. Josh Approved runs entirely on tips like this one. Thank you for keeping it going.",
+    thanksTitle: 'Thank you',
+    thanks: 'That genuinely helps keep Josh Approved going.',
+    unavailable: "Tips aren't available right now. Please try again in a moment.",
+    tierA11y: 'Tip {price}',
+  },
   // Review prompt (ReviewModal). The button label reuses about.review;
   // the dismiss label reuses common.notNow.
   review: {
