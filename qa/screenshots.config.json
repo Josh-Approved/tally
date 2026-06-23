@@ -5,7 +5,7 @@
       {
         "id": "core",
         "source": "ios/home.png",
-        "caption": "A calm, free budget tracker. See where your money goes."
+        "caption": "A calm budget tracker. See where your money goes."
       },
       {
         "id": "josh-approved",
@@ -16,7 +16,7 @@
       {
         "id": "core",
         "source": "android/home.png",
-        "caption": "A calm, free budget tracker. See where your money goes."
+        "caption": "A calm budget tracker. See where your money goes."
       },
       {
         "id": "josh-approved",
@@ -27,7 +27,7 @@
       {
         "id": "core",
         "source": "ipad/home.png",
-        "caption": "A calm, free budget tracker. See where your money goes."
+        "caption": "A calm budget tracker. See where your money goes."
       },
       {
         "id": "josh-approved",
