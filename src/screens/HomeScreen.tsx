@@ -11,8 +11,12 @@ import { AccountPills, type AccountScope } from '../components/AccountPills';
 import { CategoryDonut, type DonutSegment } from '../components/CategoryDonut';
 import { TotalsRow } from '../components/TotalsRow';
 import { TransactionList } from '../components/TransactionList';
+import { FundingFooter } from '../components/FundingFooter';
+import TipJarSheet from '../components/TipJarSheet';
 import { Hairline } from '../components/Hairline';
 import { Text } from '../components/Text';
+import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
+import { TIP_JAR_ENABLED } from '../lib/links';
 import { useTheme, space, target } from '../theme';
 import { t } from '../i18n';
 import { Pressable } from 'react-native';
@@ -47,6 +51,7 @@ export function HomeScreen() {
   const [donut, setDonut] = useState<DonutSegment[]>([]);
   const [currency, setCurrency] = useState('USD');
   const [recurringNotice, setRecurringNotice] = useState<number | null>(null);
+  const [tipVisible, setTipVisible] = useState(false);
 
   const range = useMemo(() => periodRange(period, anchor), [period, anchor]);
 
@@ -166,6 +171,11 @@ export function HomeScreen() {
               />
             </View>
           }
+          ListFooterComponent={
+            <FundingFooter
+              onSupport={TIP_JAR_ENABLED ? () => setTipVisible(true) : undefined}
+            />
+          }
         />
       </View>
 
@@ -218,6 +228,14 @@ export function HomeScreen() {
           <Text weight="medium">{t('home.income')}</Text>
         </Pressable>
       </View>
+
+      {tipVisible && (
+        <TipJarSheet
+          visible
+          onDismiss={() => setTipVisible(false)}
+          productIds={TIP_PRODUCT_IDS}
+        />
+      )}
     </Screen>
   );
 }

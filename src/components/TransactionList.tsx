@@ -18,6 +18,7 @@ interface Props {
   onPressRow?: (tx: Transaction) => void;
   emptyText?: string;
   ListHeaderComponent?: React.ReactElement | null;
+  ListFooterComponent?: React.ReactElement | null;
 }
 
 interface Section {
@@ -37,6 +38,7 @@ export function TransactionList({
   onPressRow,
   emptyText,
   ListHeaderComponent,
+  ListFooterComponent,
 }: Props) {
   const { c } = useTheme();
 
@@ -67,6 +69,7 @@ export function TransactionList({
         <View style={{ padding: space.s7, alignItems: 'center' }}>
           <Text color="fgMuted">{emptyText ?? t('tx.listEmpty')}</Text>
         </View>
+        {ListFooterComponent}
       </View>
     );
   }
@@ -76,6 +79,7 @@ export function TransactionList({
       data={sections}
       keyExtractor={(s) => s.key}
       ListHeaderComponent={ListHeaderComponent}
+      ListFooterComponent={ListFooterComponent}
       contentContainerStyle={{ paddingBottom: space.s9 }}
       renderItem={({ item }) => {
         if (item.type === 'header') {
