@@ -1,5 +1,14 @@
 import React, { useMemo } from 'react';
-import { Pressable, View, FlatList } from 'react-native';
+import {
+  Pressable,
+  View,
+  FlatList,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { useTheme, space } from '../theme';
 import { Text } from './Text';
 import { Hairline } from './Hairline';
@@ -19,6 +28,15 @@ interface Props {
   emptyText?: string;
   ListHeaderComponent?: React.ReactElement | null;
   ListFooterComponent?: React.ReactElement | null;
+  /** Pull-to-reveal footer wiring (see usePullRevealFooter): scroll handler +
+   *  bounce flag drive the bottom-overscroll wordmark reveal on iOS. */
+  onScroll?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  alwaysBounceVertical?: boolean;
+  /** onLayout for the footer holder; feeds the pull-reveal footerHeight. */
+  onFooterLayout?: (e: LayoutChangeEvent) => void;
+  /** Extra contentContainerStyle merged over the list default (e.g. flexGrow:1
+   *  so a short list fills the screen and the footer rests at the bottom). */
+  contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
 interface Section {
@@ -39,6 +57,10 @@ export function TransactionList({
   emptyText,
   ListHeaderComponent,
   ListFooterComponent,
+  onScroll,
+  alwaysBounceVertical,
+  onFooterLayout,
+  contentContainerStyle,
 }: Props) {
   const { c } = useTheme();
 
@@ -64,12 +86,14 @@ export function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         {ListHeaderComponent}
         <View style={{ padding: space.s7, alignItems: 'center' }}>
           <Text color="fgMuted">{emptyText ?? t('tx.listEmpty')}</Text>
         </View>
-        {ListFooterComponent}
+        <View style={{ marginTop: 'auto' }} onLayout={onFooterLayout}>
+          {ListFooterComponent}
+        </View>
       </View>
     );
   }
@@ -78,9 +102,16 @@ export function TransactionList({
     <FlatList
       data={sections}
       keyExtractor={(s) => s.key}
+      onScroll={onScroll}
+      scrollEventThrottle={16}
+      alwaysBounceVertical={alwaysBounceVertical}
       ListHeaderComponent={ListHeaderComponent}
-      ListFooterComponent={ListFooterComponent}
-      contentContainerStyle={{ paddingBottom: space.s9 }}
+      ListFooterComponent={
+        <View style={{ marginTop: 'auto' }} onLayout={onFooterLayout}>
+          {ListFooterComponent}
+        </View>
+      }
+      contentContainerStyle={[{ flexGrow: 1, paddingBottom: space.s5 }, contentContainerStyle]}
       renderItem={({ item }) => {
         if (item.type === 'header') {
           return (
