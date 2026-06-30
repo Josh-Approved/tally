@@ -3,6 +3,8 @@
  * About "Support this app" row, and any future soft prompt) stays in lockstep.
  */
 
+import { Linking } from 'react-native';
+
 export const BMAC_URL = 'https://buymeacoffee.com/jtysonwilliams';
 
 /**
@@ -18,3 +20,13 @@ export const BMAC_URL = 'https://buymeacoffee.com/jtysonwilliams';
 export const DONATIONS_ENABLED: boolean = false;
 
 export const TIP_JAR_ENABLED: boolean = true;
+
+/** Opens an arbitrary URL, swallowing failures (e.g. no handler installed). */
+export function openUrl(url: string): void {
+  Linking.openURL(url).catch(() => {});
+}
+
+/** Opens the user's mail composer pre-addressed to studio feedback. */
+export function openFeedbackMail(): void {
+  openUrl('mailto:feedback@joshapproved.com?subject=' + encodeURIComponent('Tally'));
+}

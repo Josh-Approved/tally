@@ -1,5 +1,18 @@
 import React, { useMemo } from 'react';
-import { Pressable, View, FlatList } from 'react-native';
+import {
+  Pressable,
+  View,
+  FlatList,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
+import {
+  GestureDetector,
+  type ComposedGesture,
+} from 'react-native-gesture-handler';
 import { useTheme, space } from '../theme';
 import { Text } from './Text';
 import { Hairline } from './Hairline';
@@ -18,6 +31,22 @@ interface Props {
   onPressRow?: (tx: Transaction) => void;
   emptyText?: string;
   ListHeaderComponent?: React.ReactElement | null;
+  ListFooterComponent?: React.ReactElement | null;
+  /** Pull-to-reveal footer wiring (see usePullRevealFooter): scroll handler +
+   *  bounce flag drive the bottom-overscroll wordmark reveal on iOS. */
+  onScroll?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  alwaysBounceVertical?: boolean;
+  /** Pull-to-reveal gesture (Android over-pull) — wraps the list when set. */
+  gesture?: ComposedGesture;
+  /** onLayout for the list viewport; feeds at-bottom detection. */
+  onScrollViewLayout?: (e: LayoutChangeEvent) => void;
+  /** onContentSizeChange for the list; feeds at-bottom detection on short lists. */
+  onContentSizeChange?: (w: number, h: number) => void;
+  /** onLayout for the footer holder; feeds the pull-reveal footerHeight. */
+  onFooterLayout?: (e: LayoutChangeEvent) => void;
+  /** Extra contentContainerStyle merged over the list default (e.g. flexGrow:1
+   *  so a short list fills the screen and the footer rests at the bottom). */
+  contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
 interface Section {
@@ -37,6 +66,14 @@ export function TransactionList({
   onPressRow,
   emptyText,
   ListHeaderComponent,
+  ListFooterComponent,
+  onScroll,
+  alwaysBounceVertical,
+  gesture,
+  onScrollViewLayout,
+  onContentSizeChange,
+  onFooterLayout,
+  contentContainerStyle,
 }: Props) {
   const { c } = useTheme();
 
@@ -62,21 +99,35 @@ export function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         {ListHeaderComponent}
         <View style={{ padding: space.s7, alignItems: 'center' }}>
           <Text color="fgMuted">{emptyText ?? t('tx.listEmpty')}</Text>
+        </View>
+        <View style={{ marginTop: 'auto' }} onLayout={onFooterLayout}>
+          {ListFooterComponent}
         </View>
       </View>
     );
   }
 
-  return (
+  const list = (
     <FlatList
       data={sections}
       keyExtractor={(s) => s.key}
+      onScroll={onScroll}
+      scrollEventThrottle={16}
+      alwaysBounceVertical={alwaysBounceVertical}
+      overScrollMode={alwaysBounceVertical ? 'never' : 'auto'}
+      onLayout={onScrollViewLayout}
+      onContentSizeChange={onContentSizeChange}
       ListHeaderComponent={ListHeaderComponent}
-      contentContainerStyle={{ paddingBottom: space.s9 }}
+      ListFooterComponent={
+        <View style={{ marginTop: 'auto' }} onLayout={onFooterLayout}>
+          {ListFooterComponent}
+        </View>
+      }
+      contentContainerStyle={[{ flexGrow: 1, paddingBottom: space.s5 }, contentContainerStyle]}
       renderItem={({ item }) => {
         if (item.type === 'header') {
           return (
@@ -149,4 +200,7 @@ export function TransactionList({
       }}
     />
   );
+  // Wrap in the pull-to-reveal gesture when wired (Android over-pull); the pan
+  // recognises simultaneously with the list's own scroll.
+  return gesture ? <GestureDetector gesture={gesture}>{list}</GestureDetector> : list;
 }

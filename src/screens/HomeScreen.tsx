@@ -11,8 +11,13 @@ import { AccountPills, type AccountScope } from '../components/AccountPills';
 import { CategoryDonut, type DonutSegment } from '../components/CategoryDonut';
 import { TotalsRow } from '../components/TotalsRow';
 import { TransactionList } from '../components/TransactionList';
+import { FundingFooter } from '../components/FundingFooter';
+import { usePullRevealFooter } from '../components/usePullRevealFooter';
+import TipJarSheet from '../components/TipJarSheet';
 import { Hairline } from '../components/Hairline';
 import { Text } from '../components/Text';
+import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
+import { TIP_JAR_ENABLED } from '../lib/links';
 import { useTheme, space, target } from '../theme';
 import { t } from '../i18n';
 import { Pressable } from 'react-native';
@@ -32,6 +37,15 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const { c } = useTheme();
+  const {
+    pullToReveal,
+    reveal,
+    gesture,
+    onScrollJS,
+    onScrollViewLayout,
+    onContentSizeChange,
+    onFooterLayout,
+  } = usePullRevealFooter();
 
   const [period, setPeriod] = useState<PeriodKind>('month');
   // Freeze the period anchor under QA so the seeded November 2023 data and the
@@ -47,6 +61,7 @@ export function HomeScreen() {
   const [donut, setDonut] = useState<DonutSegment[]>([]);
   const [currency, setCurrency] = useState('USD');
   const [recurringNotice, setRecurringNotice] = useState<number | null>(null);
+  const [tipVisible, setTipVisible] = useState(false);
 
   const range = useMemo(() => periodRange(period, anchor), [period, anchor]);
 
@@ -148,6 +163,12 @@ export function HomeScreen() {
           currencyCode={currency}
           showAccount={scope === null && accounts.length > 1}
           onPressRow={handlePressRow}
+          onScroll={pullToReveal ? onScrollJS : undefined}
+          alwaysBounceVertical={pullToReveal}
+          gesture={gesture}
+          onScrollViewLayout={onScrollViewLayout}
+          onContentSizeChange={onContentSizeChange}
+          onFooterLayout={onFooterLayout}
           ListHeaderComponent={
             <View style={{ alignItems: 'center', paddingVertical: space.s6 }}>
               <CategoryDonut
@@ -165,6 +186,13 @@ export function HomeScreen() {
                 currencyCode={currency}
               />
             </View>
+          }
+          ListFooterComponent={
+            <FundingFooter
+              onSupport={TIP_JAR_ENABLED ? () => setTipVisible(true) : undefined}
+              reveal={reveal}
+              pullToReveal={pullToReveal}
+            />
           }
         />
       </View>
@@ -218,6 +246,14 @@ export function HomeScreen() {
           <Text weight="medium">{t('home.income')}</Text>
         </Pressable>
       </View>
+
+      {tipVisible && (
+        <TipJarSheet
+          visible
+          onDismiss={() => setTipVisible(false)}
+          productIds={TIP_PRODUCT_IDS}
+        />
+      )}
     </Screen>
   );
 }
