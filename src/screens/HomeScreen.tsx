@@ -37,7 +37,15 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const { c } = useTheme();
-  const { pullToReveal, reveal, onScrollJS, onFooterLayout } = usePullRevealFooter();
+  const {
+    pullToReveal,
+    reveal,
+    gesture,
+    onScrollJS,
+    onScrollViewLayout,
+    onContentSizeChange,
+    onFooterLayout,
+  } = usePullRevealFooter();
 
   const [period, setPeriod] = useState<PeriodKind>('month');
   // Freeze the period anchor under QA so the seeded November 2023 data and the
@@ -157,6 +165,9 @@ export function HomeScreen() {
           onPressRow={handlePressRow}
           onScroll={pullToReveal ? onScrollJS : undefined}
           alwaysBounceVertical={pullToReveal}
+          gesture={gesture}
+          onScrollViewLayout={onScrollViewLayout}
+          onContentSizeChange={onContentSizeChange}
           onFooterLayout={onFooterLayout}
           ListHeaderComponent={
             <View style={{ alignItems: 'center', paddingVertical: space.s6 }}>
