@@ -12,6 +12,7 @@ import TipJarSheet from '../components/TipJarSheet';
 import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
 import { TIP_JAR_ENABLED, openReview } from '../lib/links';
 import { useTheme, space, AppearanceToggle } from '../theme';
+import { useFeedback } from '../feedback/FeedbackProvider';
 import { t } from '../i18n';
 import { getSettings, updateSettings } from '../data/settings';
 import { listAccounts } from '../data/accounts';
@@ -25,6 +26,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
 export function SettingsScreen() {
   const navigation = useNavigation<Nav>();
   const { c } = useTheme();
+  const { open: openFeedback } = useFeedback();
 
   const [settings, setSettings] = useState<Settings | null>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -94,7 +96,7 @@ export function SettingsScreen() {
           </Text>
         </View>
         {TIP_JAR_ENABLED && <Row label={t('about.support')} onPress={() => setTipVisible(true)} />}
-        <Row label={t('about.feedback')} onPress={() => Linking.openURL('mailto:feedback@joshapproved.com')} />
+        <Row label={t('about.feedback')} onPress={() => openFeedback()} />
         <Row label={t('about.review')} onPress={openReview} />
         <Row label={t('about.source')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally')} />
         <Row label={t('about.privacy')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally/blob/main/PRIVACY.md')} />

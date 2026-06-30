@@ -35,7 +35,8 @@
       "expo-font",
       "expo-asset",
       "expo-iap",
-      "./plugins/withGradleJvmArgs"
+      "./plugins/withGradleJvmArgs",
+      "expo-mail-composer"
     ],
     "extra": {
       "eas": {
