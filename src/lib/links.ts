@@ -3,7 +3,7 @@
  * About "Support this app" row, and any future soft prompt) stays in lockstep.
  */
 
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 export const BMAC_URL = 'https://buymeacoffee.com/jtysonwilliams';
 
@@ -29,4 +29,19 @@ export function openUrl(url: string): void {
 /** Opens the user's mail composer pre-addressed to studio feedback. */
 export function openFeedbackMail(): void {
   openUrl('mailto:feedback@joshapproved.com?subject=' + encodeURIComponent('Tally'));
+}
+
+/** Numeric App Store Connect id — filled once the ASC record exists. Empty is
+ *  the known pre-store state; the review deep link no-ops cleanly until then. */
+export const IOS_APP_STORE_ID = '';
+export const ANDROID_PACKAGE = 'com.joshapproved.tally';
+
+/** Opens the platform's write-review page. iOS host pinned to the modern
+ *  apps.apple.com (canon § Review prompt); must match ReviewModal.tsx. */
+export function openReview(): void {
+  const url =
+    Platform.OS === 'ios'
+      ? `itms-apps://apps.apple.com/app/id${IOS_APP_STORE_ID}?action=write-review`
+      : `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}&showAllReviews=true`;
+  Linking.openURL(url).catch(() => {});
 }

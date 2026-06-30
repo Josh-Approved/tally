@@ -10,7 +10,7 @@ import { Hairline } from '../components/Hairline';
 import { LanguageSetting } from '../components/LanguageSetting';
 import TipJarSheet from '../components/TipJarSheet';
 import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
-import { TIP_JAR_ENABLED } from '../lib/links';
+import { TIP_JAR_ENABLED, openReview } from '../lib/links';
 import { useTheme, space, AppearanceToggle } from '../theme';
 import { t } from '../i18n';
 import { getSettings, updateSettings } from '../data/settings';
@@ -95,6 +95,7 @@ export function SettingsScreen() {
         </View>
         {TIP_JAR_ENABLED && <Row label={t('about.support')} onPress={() => setTipVisible(true)} />}
         <Row label={t('about.feedback')} onPress={() => Linking.openURL('mailto:feedback@joshapproved.com')} />
+        <Row label={t('about.review')} onPress={openReview} />
         <Row label={t('about.source')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally')} />
         <Row label={t('about.privacy')} onPress={() => Linking.openURL('https://github.com/Josh-Approved/tally/blob/main/PRIVACY.md')} />
       </ScrollView>
