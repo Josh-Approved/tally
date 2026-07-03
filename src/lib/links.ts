@@ -4,6 +4,7 @@
  */
 
 import { Linking, Platform } from 'react-native';
+import * as Application from 'expo-application';
 
 export const BMAC_URL = 'https://buymeacoffee.com/jtysonwilliams';
 
@@ -17,6 +18,18 @@ export const BMAC_URL = 'https://buymeacoffee.com/jtysonwilliams';
  * It powers the same Settings/About support placement the BMAC surface used,
  * now opening the canonical TipJarSheet instead of a browser link.
  */
+export const STUDIO_URL = 'https://joshapproved.com';
+export const REPO_URL = 'https://github.com/josh-approved/tally';
+export const PRIVACY_URL =
+  'https://github.com/josh-approved/tally/blob/main/PRIVACY.md';
+
+/** `1.2.0 (47)` — read from the bundle at runtime, never hardcoded. */
+export function versionLabel(): string {
+  const v = Application.nativeApplicationVersion ?? '1.0.0';
+  const b = Application.nativeBuildVersion ?? '1';
+  return `${v} (${b})`;
+}
+
 export const DONATIONS_ENABLED: boolean = false;
 
 export const TIP_JAR_ENABLED: boolean = true;
