@@ -3,6 +3,10 @@
   "anchors": {
     "home-title":     { "text": "Tally", "note": "TopBar title on HomeScreen — the home waypoint." },
     "period-label":   { "text": ".*Nov 2023.*", "note": "PeriodHeader month label. The app's monthNames table (src/lib/period.ts) is ABBREVIATED, so a month view renders 'Nov 2023' (not 'November') — locale-independent, and 2023 is the frozen QA anchor, proving the QA seed path is active before the screenshot. Wrapped in .* for the iOS merged-a11y-label (the PeriodSwitcher arrows can fold into one label)." },
-    "spent":          { "text": "Spent", "note": "OUTCOME anchor — the CategoryDonut center sub-label, which only renders when total expense > 0 (i.e. the QA transactions loaded). Dead-center on the home screen, so it is visible on every device cell regardless of font scale / device size, unlike a virtualized transaction row." }
+    "spent":          { "text": "Spent", "note": "OUTCOME anchor — the CategoryDonut center sub-label, which only renders when total expense > 0 (i.e. the QA transactions loaded). Dead-center on the home screen, so it is visible on every device cell regardless of font scale / device size, unlike a virtualized transaction row." },
+    "seed-tx":        { "text": ".*Weekly shop.*", "note": "T4 survival flow — the seeded Groceries transaction (note 'Weekly shop', qa-tx-3). Tapping its home row opens the edit sheet with occurredAt preserved (stays in the frozen Nov 2023 period). .* for the iOS merged row a11y label." },
+    "cat-travel":     { "text": "Travel", "note": "T4 survival flow — the 'Travel' expense category (src/data/seed.ts) that NO seed transaction uses, so it is a distinctive marker: absent from home before the edit, present on exactly one row after. The edit-sheet CategoryGrid tile renders its name as visible text." },
+    "survival-cat":   { "text": ".*Travel.*", "note": "T4 survival oracle on home — the edited transaction's row shows 'Travel' after re-categorization. assertNot before the edit, assert after / after the kill. .* for the merged row a11y label." },
+    "tx-save":        { "text": "Save changes", "note": "the AddTransaction save button in EDIT mode (i18n common.saveChanges; a fresh add reads 'Save')." }
   }
 }
