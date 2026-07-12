@@ -45,3 +45,7 @@ yarn-error.*
 *.apk
 *.aab
 build-*.tar.gz
+
+# Stryker mutation-testing sandbox/report output
+.stryker-tmp/
+reports/
