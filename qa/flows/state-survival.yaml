@@ -21,15 +21,21 @@ appId: com.joshapproved.tally
 - scrollUntilVisible:
     element: { text: ".*Weekly shop.*" }
     direction: DOWN
-- tapOn: { text: ".*Weekly shop.*" }
+- tapOn:
+    text: ".*Weekly shop.*"
+    retryTapIfNoChange: true
 - extendedWaitUntil:
     visible: { text: "Travel" }
     timeout: 10000
 - scrollUntilVisible:
     element: { text: "Travel" }
     direction: DOWN
-- tapOn: { text: "Travel" }
-- tapOn: { text: "Save changes" }
+- tapOn:
+    text: "Travel"
+    retryTapIfNoChange: true
+- tapOn:
+    text: "Save changes"
+    retryTapIfNoChange: true
 - extendedWaitUntil:
     visible: { text: "Tally" }
     timeout: 10000
