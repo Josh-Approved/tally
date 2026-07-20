@@ -9,7 +9,7 @@
  * reads local getFullYear/getMonth/getDate), keeping assertions TZ-stable.
  */
 
-import { periodRange, shiftPeriod, todayIso } from '../period';
+import { periodRange, shiftPeriod, todayIso, formatRowDate } from '../period';
 
 // Local-time YYYY-MM-DD, mirroring the module's internal ymd().
 const iso = (d: Date) =>
@@ -47,12 +47,29 @@ describe('periodRange — month', () => {
   });
 });
 
+describe('periodRange — month labels', () => {
+  it('labels every month with its short name (the chart header)', () => {
+    const names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    for (let m = 0; m < 12; m++) {
+      const r = periodRange('month', new Date(2024, m, 10));
+      expect(r.label).toBe(`${names[m]} 2024`);
+    }
+  });
+});
+
 describe('periodRange — week (Monday-start)', () => {
   it('snaps a mid-week anchor back to Monday and out to Sunday', () => {
     // 2024-03-13 is a Wednesday.
     const r = periodRange('week', new Date(2024, 2, 13));
     expect(r.startIso).toBe('2024-03-11'); // Monday
     expect(r.endIso).toBe('2024-03-17'); // Sunday
+    expect(r.label).toBe('Mar 11 – Mar 17');
+  });
+
+  it('labels a week that crosses a month boundary with both month names', () => {
+    // 2024-02-29 is a Thursday → week is Feb 26 .. Mar 3.
+    const r = periodRange('week', new Date(2024, 1, 29));
+    expect(r.label).toBe('Feb 26 – Mar 3');
   });
 
   it('keeps a Monday anchor as the week start', () => {
@@ -117,5 +134,46 @@ describe('shiftPeriod — recurrence stepping', () => {
 describe('todayIso', () => {
   it('returns a well-formed YYYY-MM-DD string', () => {
     expect(todayIso()).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+});
+
+describe('formatRowDate — transaction-row date labels', () => {
+  // Pin "now" mid-afternoon (NOT midnight) so the today/yesterday comparison
+  // must actually normalize the clock time away — a partial normalization
+  // (e.g. zeroing minutes but not hours) would misclassify today's rows.
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2026, 2, 15, 14, 37, 5)); // Sun Mar 15 2026, 14:37:05 local
+  });
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  it("labels today's date 'Today' whatever the current clock time", () => {
+    expect(formatRowDate('2026-03-15')).toBe('Today');
+  });
+
+  it("labels yesterday's date 'Yesterday'", () => {
+    expect(formatRowDate('2026-03-14')).toBe('Yesterday');
+  });
+
+  it('labels an older same-month date as month + day, not Today/Yesterday', () => {
+    expect(formatRowDate('2026-03-10')).toBe('Mar 10');
+  });
+
+  it('labels tomorrow as month + day (a future row is never Today/Yesterday)', () => {
+    expect(formatRowDate('2026-03-16')).toBe('Mar 16');
+  });
+
+  it('parses the ISO month as one-based (no off-by-one month)', () => {
+    expect(formatRowDate('2026-01-05')).toBe('Jan 5');
+    expect(formatRowDate('2025-12-31')).toBe('Dec 31');
+  });
+
+  it('crosses a month boundary for Yesterday', () => {
+    jest.setSystemTime(new Date(2026, 3, 1, 9, 30)); // Apr 1 2026
+    expect(formatRowDate('2026-03-31')).toBe('Yesterday');
+    expect(formatRowDate('2026-04-01')).toBe('Today');
+    jest.setSystemTime(new Date(2026, 2, 15, 14, 37, 5)); // restore the pinned base
   });
 });
