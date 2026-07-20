@@ -261,10 +261,13 @@ export function AddTransactionSheet() {
             onChangeText={setNote}
             placeholder={t('tx.notePlaceholder')}
             placeholderTextColor={c.fgSubtle}
+            multiline
+            textAlignVertical="top"
             style={{
               borderWidth: 1,
               borderColor: c.hairline,
               borderRadius: radius.md,
+              minHeight: target.min * 1.6,
               paddingHorizontal: space.s4,
               paddingVertical: space.s4,
               backgroundColor: c.bgElevated,
