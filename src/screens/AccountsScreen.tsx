@@ -207,7 +207,7 @@ function AccountEditor({
               placeholderTextColor={c.fgSubtle}
               style={inputStyle(c, radius, space)}
             />
-            <Text variant="caption" color="fgSubtle" style={{ marginTop: space.s2 }}>
+            <Text variant="caption" color="fgMuted" style={{ marginTop: space.s2 }}>
               {t('accounts.startingBalanceHint')}
             </Text>
           </View>

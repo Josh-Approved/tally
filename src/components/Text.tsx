@@ -19,7 +19,10 @@ const VARIANT_STYLES: Record<Variant, TextStyle> = {
 export interface TextProps extends RNTextProps {
   variant?: Variant;
   weight?: 'regular' | 'medium' | 'semibold';
-  color?: 'fg' | 'fgMuted' | 'fgSubtle' | 'fgOnInk' | 'danger' | 'success' | 'appAccent';
+  // No 'fgSubtle' — this component always renders text, and fgSubtle fails
+  // AA 4.5:1 as a text color in both palettes (canon § Theming). Use
+  // 'fgMuted' for de-emphasized text.
+  color?: 'fg' | 'fgMuted' | 'fgOnInk' | 'danger' | 'success' | 'appAccent';
   mono?: boolean;
 }
 
@@ -27,7 +30,6 @@ export function Text({ variant = 'body', weight, color, mono, style, ...rest }: 
   const { c } = useTheme();
   const computedColor =
     color === 'fgMuted' ? c.fgMuted :
-    color === 'fgSubtle' ? c.fgSubtle :
     color === 'fgOnInk' ? c.inkButtonText :
     color === 'danger' ? c.danger :
     color === 'success' ? c.success :
