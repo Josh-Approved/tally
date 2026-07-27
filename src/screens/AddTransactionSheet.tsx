@@ -19,9 +19,6 @@ import { t } from '../i18n';
 import { decimalsForCurrency, formatAmount, parseAmount, minorPerUnit } from '../lib/money';
 import type { RootStackParamList } from '../navigation/types';
 import type { Account, Category, TxKind } from '../data/types';
-import ReviewModal from '../components/ReviewModal';
-import { recordSuccessfulCompletion } from '../storage/reviewPrompt';
-import { IOS_APP_STORE_ID, ANDROID_PACKAGE } from '../lib/links';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'AddTransaction'>;
 type Route = RouteProp<RootStackParamList, 'AddTransaction'>;
@@ -42,7 +39,6 @@ export function AddTransactionSheet() {
   const [currency, setCurrency] = useState('USD');
   const [accountSheetOpen, setAccountSheetOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(route.params.transactionId ?? null);
-  const [reviewVisible, setReviewVisible] = useState(false);
 
   const visibleCategories = useMemo(() => categories.filter((c) => c.kind === kind && !c.hidden), [categories, kind]);
 
@@ -114,12 +110,7 @@ export function AddTransactionSheet() {
       return;
     }
     await createTransaction({ kind, amountMinor, accountId, categoryId, occurredAt, note: note.trim() || null });
-    // Saving a transaction is this app's genuine success. The canonical counter
-    // gates the prompt to the 2nd completion (cap 3) so it can't spam; hold this
-    // screen's dismissal until the prompt resolves.
-    const show = await recordSuccessfulCompletion();
-    if (show) setReviewVisible(true);
-    else navigation.goBack();
+    navigation.goBack();
   };
 
   const handleDelete = () => {
@@ -305,17 +296,6 @@ export function AddTransactionSheet() {
           </Text>
         </Pressable>
       </View>
-
-      <ReviewModal
-        visible={reviewVisible}
-        onDismiss={() => {
-          setReviewVisible(false);
-          navigation.goBack();
-        }}
-        appName="Tally"
-        iosAppStoreId={IOS_APP_STORE_ID}
-        androidPackageName={ANDROID_PACKAGE}
-      />
     </Screen>
   );
 }
