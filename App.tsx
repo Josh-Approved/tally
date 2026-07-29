@@ -12,6 +12,17 @@ import { AppShell } from './src/shell/AppShell';
 import { SettingsProvider, useSettings } from './src/state/SettingsProvider';
 import { RootNavigator } from './src/navigation';
 import { QA_MODE } from './src/qa/qaMode';
+import { IOS_APP_STORE_ID, ANDROID_PACKAGE } from './src/lib/links';
+
+// Store identity for the canonical review prompt. The shell owns the trigger —
+// it counts the session, applies the 3/15/30 schedule and the 3-per-install cap,
+// and mounts the modal; this app carries no trigger code. Module scope (not an
+// inline literal) so the prop's identity is stable across renders.
+const REVIEW = {
+  appName: 'Tally',
+  iosAppStoreId: IOS_APP_STORE_ID,
+  androidPackageName: ANDROID_PACKAGE,
+};
 
 // Hold the native launch screen until the JS splash takes over (no icon blink).
 // Must run at module scope, before first paint; skipped under QA_MODE so the
@@ -23,7 +34,7 @@ if (!QA_MODE) {
 function AppRoot({ fontsLoaded }: { fontsLoaded: boolean }) {
   const { ready } = useSettings();
   return (
-    <AppShell ready={fontsLoaded && ready}>
+    <AppShell ready={fontsLoaded && ready} review={REVIEW}>
       <RootNavigator />
     </AppShell>
   );
