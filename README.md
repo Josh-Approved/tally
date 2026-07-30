@@ -4,9 +4,7 @@ An expense tracker. No paywall. No ads. No tracking. No accounts. Your data stay
 
 ## What it does
 
-Tap +/− to add an expense or income, pick a category, see your month at a glance. Tally shows a category breakdown chart for whichever period you pick (day / week / month / year), totals for income / expenses / net, and a chronological list of every transaction. You can keep multiple accounts (cash, checking, a specific card), set up recurring transactions for things like rent and subscriptions, and export everything as CSV or as a JSON archive whenever you want.
-
-On supported devices, Tally can read receipts with on-device AI — point the camera at a receipt and the amount, merchant, date, and a suggested category come back ready to confirm.
+Tap +/− to add an expense or income, pick a category, see your month at a glance. Tally shows a category breakdown chart for whichever period you pick (day / week / month / year), totals for income / expenses / net, and a chronological list of every transaction. You can keep multiple accounts (cash, checking, a specific card), and set up recurring transactions for things like rent and subscriptions.
 
 ## Who it's for
 
@@ -16,7 +14,7 @@ Anyone who's tired of expense trackers that paywall the feature you used to have
 
 Coming soon to the App Store and Play Store.
 
-In the meantime, run it locally — see below.
+In the meantime, run it locally, see below.
 
 ## Run it locally
 
@@ -33,12 +31,12 @@ Then scan the QR code with Expo Go (or press `i` for iOS simulator, `a` for Andr
 
 ## Privacy
 
-Your data stays with you. We don't collect any of it — no accounts, no tracking, no analytics. See [PRIVACY.md](PRIVACY.md).
+Your data stays with you. We don't collect any of it: no accounts, no tracking, no analytics. See [PRIVACY.md](PRIVACY.md).
 
 ## License
 
-GPL-3.0 — see [LICENSE](LICENSE).
+GPL-3.0, see [LICENSE](LICENSE).
 
 ## Feedback
 
-Email [feedback@joshapproved.com](mailto:feedback@joshapproved.com) with bugs, feature requests, or anything else.
+Email [feedback@joshapproved.com](mailto:feedback@joshapproved.com) with bugs, feature requests, or anything else. No ads, no subscriptions, no data harvest. If it's worth a few dollars to you, there's an optional tip jar in the app.
