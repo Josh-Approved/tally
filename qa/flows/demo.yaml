@@ -1,0 +1,78 @@
+# Hand-authored DEMO flow for the store/README GIF — tally's core loop: the
+# month at a glance (donut, totals, transactions), then logging an expense on
+# the keypad and picking its category. NOT the generated screenshot journey
+# (qa/flows/mobile.yaml), which only lands on home for stills. Kept human-paced
+# and held on each state long enough to read. Driven headless by
+# josh-approved-factory/scripts/demo-capture.mjs (records the run + composites it
+# into the signature device frame). Runs against the QA_MODE build, whose home
+# period is frozen to November 2023 (src/qa/fixtures.ts) so the seeded spread
+# fills the donut on every run.
+appId: com.joshapproved.tally
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 4000
+- extendedWaitUntil:
+    visible:
+      text: "Tally"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: ".*Nov 2023.*"
+    timeout: 15000
+# Hold on home — where the money went, in one screen.
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    text: "Expense"
+    retryTapIfNoChange: true
+# The keypad is unique to the add sheet ("9" never renders alone on home), so it
+# is the safe anchor that the sheet is up.
+- extendedWaitUntil:
+    visible:
+      text: "9"
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 1600
+# Tap out 42.50 — the amount grows as you type.
+# NOTE: Maestro FULL-MATCHES `text:` as a regex, so a bare "." is "any single
+# character" and lands on the first one-char element on screen (the "1" key) —
+# that typed 42150 into the first cut of this demo. Escape it to a literal
+# period. The keypad has no testIDs (src/components/Keypad.tsx renders bare
+# Text), so the escaped regex is the anchor.
+- tapOn:
+    text: "4"
+- tapOn:
+    text: "2"
+- tapOn:
+    text: '\.'
+- tapOn:
+    text: "5"
+- tapOn:
+    text: "0"
+- waitForAnimationToEnd:
+    timeout: 1600
+# Then the category. The grid sits under the keypad, so scroll it into view.
+- scrollUntilVisible:
+    element:
+      text: "Eating out"
+    direction: DOWN
+- waitForAnimationToEnd:
+    timeout: 1200
+- tapOn:
+    text: "Eating out"
+    retryTapIfNoChange: true
+- waitForAnimationToEnd:
+    timeout: 1800
+# Save is pinned below the scroll area, so it needs no scroll.
+- tapOn:
+    text: "Save"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible:
+      text: "Tally"
+    timeout: 10000
+# Hold on home so the return lands before the loop restarts.
+- waitForAnimationToEnd:
+    timeout: 3000
