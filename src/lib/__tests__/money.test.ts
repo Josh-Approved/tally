@@ -13,6 +13,9 @@ import {
   minorPerUnit,
   parseAmount,
   formatAmount,
+  currencySymbol,
+  fitMonoFontSize,
+  CURRENCY_SYMBOLS,
 } from '../money';
 
 describe('decimalsForCurrency / minorPerUnit', () => {
@@ -136,5 +139,175 @@ describe('formatAmount — integer minor units to display', () => {
     const minor = parseAmount('1234.56', 'USD');
     expect(minor).toBe(123456);
     expect(formatAmount(minor!, 'USD')).toContain('1,234.56');
+  });
+
+  it('stays on one line-worth of characters for a year-scale total', () => {
+    // Year period on a real budget: eight-figure minor units.
+    expect(formatAmount(1234567890, 'USD')).toBe('$12,345,678.90');
+    expect(formatAmount(-1234567890, 'USD')).toBe('−$12,345,678.90');
+    expect(formatAmount(1234567890, 'USD', { sign: true })).toBe('+$12,345,678.90');
+  });
+});
+
+/**
+ * Defect tally-20260801-1 — the home screen rendered "USD1,730.44" and the wide
+ * ISO code overflowed the donut and wrapped every total mid-number.
+ *
+ * The trap these tests exist for: Node runs full-ICU, so
+ * `Intl.NumberFormat(…, { currencyDisplay: 'narrowSymbol' })` hands back "$"
+ * here and the old implementation looked correct under Jest while shipping the
+ * bare code on Hermes. So these assertions pin the SYMBOL TABLE and simulate the
+ * device engine explicitly rather than trusting the ambient Intl.
+ */
+describe('currencySymbol — deterministic on every engine', () => {
+  const realIntl = globalThis.Intl;
+  afterEach(() => {
+    globalThis.Intl = realIntl;
+  });
+
+  // Codes with no cross-platform-safe short symbol; the ISO code is correct
+  // output for these, not a fallback bug.
+  const CODE_ONLY = new Set(['AED', 'SAR', 'QAR', 'KWD', 'BHD']);
+
+  it('pins the symbols users actually see', () => {
+    expect(currencySymbol('USD')).toBe('$');
+    expect(currencySymbol('EUR')).toBe('€');
+    expect(currencySymbol('GBP')).toBe('£');
+    expect(currencySymbol('JPY')).toBe('¥');
+    expect(currencySymbol('INR')).toBe('₹');
+    expect(currencySymbol('BRL')).toBe('R$');
+  });
+
+  it('is case-insensitive on the code', () => {
+    expect(currencySymbol('usd')).toBe('$');
+    expect(currencySymbol('eur')).toBe('€');
+  });
+
+  it('keeps the ISO code only for currencies with no safe short symbol', () => {
+    for (const code of CODE_ONLY) {
+      expect(CURRENCY_SYMBOLS[code]).toBeUndefined();
+    }
+  });
+
+  it('covers every currency the app offers', () => {
+    // Drift guard: adding a code to SUPPORTED_CURRENCIES without a symbol would
+    // re-introduce the wide-code overflow for that currency.
+    const { SUPPORTED_CURRENCIES } = require('../currency') as {
+      SUPPORTED_CURRENCIES: readonly string[];
+    };
+    const missing = SUPPORTED_CURRENCIES.filter(
+      (code) => !CODE_ONLY.has(code) && !CURRENCY_SYMBOLS[code]
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it('gives every table entry a symbol no wider than the ISO code it replaces', () => {
+    // CHF is its own conventional symbol — the code IS the symbol there.
+    for (const [code, symbol] of Object.entries(CURRENCY_SYMBOLS)) {
+      expect(symbol.length).toBeGreaterThan(0);
+      expect(symbol.length).toBeLessThanOrEqual(3);
+      if (code !== 'CHF') expect(symbol).not.toBe(code);
+    }
+  });
+
+  it('still yields a symbol when the engine has no Intl at all (Hermes floor)', () => {
+    // @ts-expect-error — deliberately removing a global to model a trimmed engine.
+    delete globalThis.Intl;
+    expect(currencySymbol('USD')).toBe('$');
+    expect(formatAmount(173044, 'USD')).toBe('$1,730.44');
+    expect(formatAmount(320000, 'USD')).toBe('$3,200.00');
+    expect(formatAmount(146956, 'USD', { sign: true })).toBe('+$1,469.56');
+  });
+
+  it('still yields a symbol when Intl.NumberFormat throws', () => {
+    globalThis.Intl = {
+      NumberFormat: function NumberFormat() {
+        throw new Error('trimmed ICU');
+      },
+    } as unknown as typeof Intl;
+    expect(currencySymbol('GBP')).toBe('£');
+    expect(formatAmount(173044, 'GBP')).toBe('£1,730.44');
+  });
+
+  it('ignores an engine whose narrowSymbol just echoes the ISO code', () => {
+    // The real device behaviour: Intl exists, formatToParts works, but the
+    // trimmed locale data has no narrow symbol so it returns "USD".
+    globalThis.Intl = {
+      NumberFormat: function NumberFormat(this: unknown) {
+        return {
+          formatToParts: () => [
+            { type: 'currency', value: 'USD' },
+            { type: 'integer', value: '0' },
+          ],
+        };
+      },
+    } as unknown as typeof Intl;
+    expect(currencySymbol('USD')).toBe('$');
+    expect(formatAmount(173044, 'USD')).toBe('$1,730.44');
+    expect(formatAmount(173044, 'USD')).not.toContain('USD');
+  });
+
+  it('falls back to the bare code for a currency the app does not ship', () => {
+    // @ts-expect-error — no Intl, so there is nothing but the fallback left.
+    delete globalThis.Intl;
+    expect(currencySymbol('ZZZ')).toBe('ZZZ');
+  });
+});
+
+describe('fitMonoFontSize — a total can never wrap or escape its box', () => {
+  // IBM Plex Mono advances 0.6em per glyph; the helper budgets 0.62em.
+  const widthOf = (text: string, size: number) => text.length * 0.62 * size;
+
+  it('leaves a short total at its base size', () => {
+    expect(fitMonoFontSize('$0.00', 152, 32, 14)).toBe(32);
+  });
+
+  it('shrinks the seeded home-screen total to fit the donut hole', () => {
+    // size 240 donut → hole 196 → usable centre width ~152.
+    const size = fitMonoFontSize('$1,730.44', 152, 32, 14);
+    expect(size).toBeLessThan(32);
+    expect(widthOf('$1,730.44', size)).toBeLessThanOrEqual(152);
+  });
+
+  it('keeps even the pre-fix ISO-code string inside the ring', () => {
+    // Belt and braces: if some currency legitimately renders as a 3-char code,
+    // the layout still has to hold it.
+    const text = 'USD1,730.44';
+    const size = fitMonoFontSize(text, 152, 32, 14);
+    expect(widthOf(text, size)).toBeLessThanOrEqual(152);
+  });
+
+  it('holds a year-scale total inside the ring', () => {
+    const text = '−$12,345,678.90';
+    const size = fitMonoFontSize(text, 152, 32, 14);
+    expect(size).toBeGreaterThanOrEqual(14);
+    expect(widthOf(text, size)).toBeLessThanOrEqual(152);
+  });
+
+  it('holds the seeded totals inside a narrow TotalsRow column', () => {
+    // iPhone SE (320pt): (320 − 32 − 2·1)/3 − 4 ≈ 91pt per column. These are the
+    // three figures from the defect screenshot, which previously wrapped.
+    const colWidth = 91;
+    for (const text of ['$3,200.00', '$1,730.44', '+$1,469.56']) {
+      const size = fitMonoFontSize(text, colWidth, 16, 10);
+      expect(widthOf(text, size)).toBeLessThanOrEqual(colWidth);
+    }
+  });
+
+  it('bottoms out at the floor for an impossible figure, so it truncates on one line', () => {
+    // A 15-glyph total in a third of an iPhone SE cannot fit at a legible size;
+    // the contract is that it stops shrinking and lets numberOfLines={1}
+    // ellipsize it — never that it wraps mid-number.
+    const size = fitMonoFontSize('−$12,345,678.90', 91, 16, 10);
+    expect(size).toBe(10);
+  });
+
+  it('never returns below the floor, so a huge string ellipsizes instead of vanishing', () => {
+    expect(fitMonoFontSize('−$999,999,999,999.99', 40, 32, 14)).toBe(14);
+  });
+
+  it('is defensive about a zero / unmeasured width', () => {
+    expect(fitMonoFontSize('$1.00', 0, 16, 10)).toBe(16);
+    expect(fitMonoFontSize('', 100, 16, 10)).toBe(16);
   });
 });

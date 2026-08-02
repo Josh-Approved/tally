@@ -1,9 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
+import { PixelRatio, View } from 'react-native';
 import Svg, { Circle, Path, G } from 'react-native-svg';
 import { useTheme } from '../theme';
 import { Text } from './Text';
-import { formatAmount } from '../lib/money';
+import { fitMonoFontSize, formatAmount } from '../lib/money';
 
 export interface DonutSegment {
   key: string;
@@ -20,6 +20,21 @@ interface Props {
 
 const STROKE = 22;
 const GAP_DEG = 2;
+
+// Centre-label type. `numericLarge` is 32/40; CENTER_MIN_FONT is the floor the
+// total may shrink to before it ellipsizes rather than escape the ring.
+const CENTER_BASE_FONT = 32;
+const CENTER_MIN_FONT = 14;
+
+/**
+ * Usable width for the centre label: the hole's diameter (size − 2·STROKE) with
+ * an inset, because the hole is a CIRCLE — a full-diameter box would poke out
+ * through the ring at the corners. 0.78 keeps the two-line stack (amount +
+ * sub-label) inside the chord at its own height.
+ */
+export function centerLabelWidth(size: number): number {
+  return Math.max(0, size - 2 * STROKE) * 0.78;
+}
 
 function polar(cx: number, cy: number, r: number, deg: number): { x: number; y: number } {
   const rad = ((deg - 90) * Math.PI) / 180;
@@ -42,6 +57,20 @@ export function CategoryDonut({ size, segments, totalLabelMinor, currencyCode, c
 
   const total = segments.reduce((s, x) => s + x.valueMinor, 0);
   const hasData = total > 0 && segments.length > 0;
+
+  // The centre total must stay inside the ring at ANY currency width ("USD" vs
+  // "$"), any amount, and any Dynamic Type setting. RN scales the *rendered*
+  // fontSize by the OS font scale, so fit against the descaled width and let
+  // the OS scale it back up; numberOfLines={1} is the hard backstop.
+  const totalLabel = formatAmount(totalLabelMinor, currencyCode);
+  const labelWidth = centerLabelWidth(size);
+  const fontScale = PixelRatio.getFontScale() || 1;
+  const centerFont = fitMonoFontSize(
+    totalLabel,
+    labelWidth / fontScale,
+    CENTER_BASE_FONT,
+    CENTER_MIN_FONT
+  );
 
   const arcs: React.ReactNode[] = [];
   if (hasData) {
@@ -98,12 +127,28 @@ export function CategoryDonut({ size, segments, totalLabelMinor, currencyCode, c
           {arcs}
         </G>
       </Svg>
-      <View style={{ position: 'absolute', alignItems: 'center', justifyContent: 'center' }}>
-        <Text variant="numericLarge" weight="semibold" mono>
-          {formatAmount(totalLabelMinor, currencyCode)}
+      <View
+        style={{
+          position: 'absolute',
+          width: labelWidth,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text
+          variant="numericLarge"
+          weight="semibold"
+          mono
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{ fontSize: centerFont, lineHeight: Math.round(centerFont * 1.25) }}
+        >
+          {totalLabel}
         </Text>
         {centerSubLabel ? (
-          <Text variant="caption" color="fgMuted">{centerSubLabel}</Text>
+          <Text variant="caption" color="fgMuted" numberOfLines={1} ellipsizeMode="tail">
+            {centerSubLabel}
+          </Text>
         ) : null}
       </View>
     </View>
