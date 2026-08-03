@@ -1,18 +1,31 @@
 import * as SQLite from 'expo-sqlite';
-
-const DB_NAME = 'tally.db';
+import { getDb as getSharedDb } from '../storage/kv';
 
 let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
+/**
+ * The connection comes from the shell's storage/kv.ts — the app's ONE
+ * database connection — never from a second openDatabaseAsync here. This
+ * module used to open its own handle (same file as kv.ts's DB_NAME, from
+ * dbConfig.ts): on the first launch after an install the SQLite directory
+ * does not exist yet, so both connections raced expo-sqlite's
+ * ensureDatabasePathExists and the loser rejected, failing hydration open to
+ * an empty dataset (packing-list/grocery-list fixed the identical shape
+ * 2026-08-01, ~2-in-15 cold launches). Routing through the shared connection
+ * removes the second opener entirely.
+ */
 export function getDb(): Promise<SQLite.SQLiteDatabase> {
   if (!dbPromise) {
     dbPromise = (async () => {
-      const db = await SQLite.openDatabaseAsync(DB_NAME);
+      const db = await getSharedDb();
       await db.execAsync('PRAGMA journal_mode = WAL;');
       await db.execAsync('PRAGMA foreign_keys = ON;');
       await migrate(db);
       return db;
-    })();
+    })().catch((err) => {
+      dbPromise = null; // a failed open must not be cached
+      throw err;
+    });
   }
   return dbPromise;
 }
