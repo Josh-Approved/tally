@@ -11,14 +11,14 @@
     { "assert": "@spent" }
   ],
   "survival": {
-    "$comment": "T4 chaos net — state-survival subflow (compiles to qa/flows/state-survival.yaml; full profile + nightly, NOT per-PR). Core mutating action = re-categorize a seeded transaction (edit qa-tx-3 'Weekly shop' from Groceries to Travel — a category no seed row uses, so it's a distinctive on-home marker). Editing preserves occurredAt, so the row stays in the frozen Nov 2023 period and is visible on home (a freshly-added tx would fall in the real-today month, off the frozen view). Then REAL process death (killApp on Android / stopApp on iOS), then relaunch keeping state. Intent oracle: the row still reads 'Travel' after the kill. The leading assertNot proves Travel wasn't already on home. scrollUntilVisible guards the row (day-03 tx sits low in a date-sorted list) and the Travel tile (low in the category grid).",
+    "$comment": "T4 chaos net — state-survival subflow (compiles to qa/flows/state-survival.yaml; full profile + nightly, NOT per-PR). Core mutating action = re-categorize a seeded transaction (edit qa-tx-3 'Weekly shop' from Groceries to Travel — a category no seed row uses, so it's a distinctive on-home marker). Editing preserves occurredAt, so the row stays in the frozen Nov 2023 period and is visible on home (a freshly-added tx would fall in the real-today month, off the frozen view). Then REAL process death (killApp on Android / stopApp on iOS), then relaunch keeping state. Intent oracle: the row still reads 'Travel' after the kill. The leading assertNot proves Travel wasn't already on home. scrollUntilVisible guards the row (day-03 tx sits low in a date-sorted list) and the Travel tile (low in the category grid). The sheet-opened waypoint is @tx-save, NOT @cat-travel (2026-09-08, defect tally-20260719-1): waiting on the Travel tile asserted it was VISIBLE one step before the scroll that brings it into view, so the flow failed inside the edit sheet BEFORE the kill ever ran and the harness reported lost state that was never lost. Never wait on an anchor the very next step has to scroll to.",
     "steps": [
       { "waitFor": "@home-title", "timeout": 30000 },
       { "waitFor": "@period-label", "timeout": 15000 },
       { "assertNot": "@survival-cat" },
       { "scrollUntilVisible": "@seed-tx" },
       { "tap": "@seed-tx" },
-      { "waitFor": "@cat-travel", "timeout": 10000 },
+      { "waitFor": "@tx-save", "timeout": 10000 },
       { "scrollUntilVisible": "@cat-travel" },
       { "tap": "@cat-travel" },
       { "tap": "@tx-save" },

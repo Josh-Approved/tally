@@ -25,7 +25,7 @@ appId: com.joshapproved.tally
     text: ".*Weekly shop.*"
     retryTapIfNoChange: true
 - extendedWaitUntil:
-    visible: { text: "Travel" }
+    visible: { text: "Save changes" }
     timeout: 10000
 - scrollUntilVisible:
     element: { text: "Travel" }
