@@ -9,7 +9,7 @@ import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { Keypad } from '../components/Keypad';
 import { CategoryGrid } from '../components/CategoryGrid';
-import { useTheme, space, target, radius } from '../theme';
+import { useTheme, space, target, radius, type as ty } from '../theme';
 import { listCategories } from '../data/categories';
 import { listAccounts } from '../data/accounts';
 import { getSettings } from '../data/settings';
@@ -155,7 +155,9 @@ export function AddTransactionSheet() {
       >
         <View style={{ alignItems: 'center', paddingVertical: space.s7, paddingHorizontal: space.s5 }}>
           <Text variant="caption" color="fgMuted">{kind === 'expense' ? t('tx.spent') : t('tx.received')}</Text>
-          <Text mono weight="semibold" style={{ fontSize: 44, lineHeight: 52, marginTop: space.s2 }}>
+          {/* `ty.hero` is the canonical 44/52 step — the literal it replaces pinned
+              the leading, so the amount clipped at large Dynamic Type. */}
+          <Text mono weight="semibold" style={{ ...ty.hero, marginTop: space.s2 }}>
             {kind === 'expense' ? '−' : '+'}{formattedAmount}
           </Text>
         </View>
@@ -251,7 +253,7 @@ export function AddTransactionSheet() {
             value={note}
             onChangeText={setNote}
             placeholder={t('tx.notePlaceholder')}
-            placeholderTextColor={c.fgSubtle}
+            placeholderTextColor={c.fgMuted}
             multiline
             textAlignVertical="top"
             style={{

@@ -7,6 +7,7 @@ import { TopBar, TopBarButton } from '../components/TopBar';
 import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { Button } from '../components/Button';
+import { useReducedMotion } from '../components/Dialogs';
 import { useTheme, space, radius } from '../theme';
 import { listAccountsWithBalance, createAccount, updateAccount, type AccountWithBalance } from '../data/accounts';
 import { getSettings } from '../data/settings';
@@ -139,6 +140,7 @@ function AccountEditor({
   onSaved: () => void;
 }) {
   const { c } = useTheme();
+  const reduceMotion = useReducedMotion();
   const [name, setName] = useState('');
   const [startingBalance, setStartingBalance] = useState('');
 
@@ -170,7 +172,13 @@ function AccountEditor({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      // animationType is a prop, not a hook — nothing else in the app guards it,
+      // so a literal here would slide in regardless of the OS Reduce Motion setting.
+      animationType={reduceMotion ? 'none' : 'slide'}
+      onRequestClose={onClose}
+    >
       <Screen>
         <TopBar
           title={editing ? t('accounts.editTitle') : t('accounts.newTitle')}
@@ -190,7 +198,7 @@ function AccountEditor({
               value={name}
               onChangeText={setName}
               placeholder={t('accounts.namePlaceholder')}
-              placeholderTextColor={c.fgSubtle}
+              placeholderTextColor={c.fgMuted}
               autoFocus
               style={inputStyle(c, radius, space)}
             />
@@ -204,7 +212,7 @@ function AccountEditor({
               onChangeText={setStartingBalance}
               keyboardType="decimal-pad"
               placeholder={t('accounts.startingBalancePlaceholder')}
-              placeholderTextColor={c.fgSubtle}
+              placeholderTextColor={c.fgMuted}
               style={inputStyle(c, radius, space)}
             />
             <Text variant="caption" color="fgMuted" style={{ marginTop: space.s2 }}>

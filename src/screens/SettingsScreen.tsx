@@ -8,6 +8,7 @@ import { TopBar, TopBarButton } from '../components/TopBar';
 import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { LanguageSetting } from '../components/LanguageSetting';
+import { useReducedMotion } from '../components/Dialogs';
 import TipJarSheet from '../components/TipJarSheet';
 import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
 import { TIP_JAR_ENABLED, openReview } from '../lib/links';
@@ -165,7 +166,7 @@ function Row({ label, value, onPress }: { label: string; value?: string; onPress
       >
         <Text style={{ flex: 1 }}>{label}</Text>
         {value ? <Text color="fgMuted">{value}</Text> : null}
-        <ChevronRight size={18} color={c.fgSubtle} strokeWidth={1.5} />
+        <ChevronRight size={18} color={c.fgMuted} strokeWidth={1.5} />
       </Pressable>
       <Hairline style={{ marginLeft: space.s5 }} />
     </View>
@@ -188,8 +189,15 @@ function PickerModal({
   onClose: () => void;
 }) {
   const { c } = useTheme();
+  const reduceMotion = useReducedMotion();
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      // animationType is a prop, not a hook — nothing else in the app guards it,
+      // so a literal here would slide in regardless of the OS Reduce Motion setting.
+      animationType={reduceMotion ? 'none' : 'slide'}
+      onRequestClose={onClose}
+    >
       <Screen>
         <TopBar
           title={title}

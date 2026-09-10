@@ -1,19 +1,43 @@
 import React from 'react';
 import { Text as RNText, type TextProps as RNTextProps, type TextStyle } from 'react-native';
-import { useTheme, typography } from '../theme';
+import { useTheme, typography, scaledLineHeight } from '../theme';
 
 type Variant = 'body' | 'bodyMuted' | 'bodySubtle' | 'caption' | 'h1' | 'h2' | 'h3' | 'numeric' | 'numericLarge';
 
+// Leading has to be READ at render time, not frozen at import time: RN scales
+// fontSize by the OS text-size setting but never a literal lineHeight, so a
+// pinned number collides and clips at large Dynamic Type (canon § Accessibility;
+// gate `a11y/scalable-line-height`). These are getters for the same reason the
+// `type` scale in src/theme/typography.ts is — each read picks up the live
+// scale, and at scale 1.0 the values are byte-identical to the old literals.
 const VARIANT_STYLES: Record<Variant, TextStyle> = {
-  body: { fontSize: 16, lineHeight: 24 },
-  bodyMuted: { fontSize: 16, lineHeight: 24 },
-  bodySubtle: { fontSize: 14, lineHeight: 20 },
-  caption: { fontSize: 12, lineHeight: 16 },
-  h1: { fontSize: 32, lineHeight: 40, letterSpacing: -0.6 },
-  h2: { fontSize: 24, lineHeight: 32, letterSpacing: -0.4 },
-  h3: { fontSize: 20, lineHeight: 28, letterSpacing: -0.2 },
-  numeric: { fontSize: 16, lineHeight: 24 },
-  numericLarge: { fontSize: 32, lineHeight: 40, letterSpacing: -0.4 },
+  get body() {
+    return { fontSize: 16, lineHeight: scaledLineHeight(24) };
+  },
+  get bodyMuted() {
+    return { fontSize: 16, lineHeight: scaledLineHeight(24) };
+  },
+  get bodySubtle() {
+    return { fontSize: 14, lineHeight: scaledLineHeight(20) };
+  },
+  get caption() {
+    return { fontSize: 12, lineHeight: scaledLineHeight(16) };
+  },
+  get h1() {
+    return { fontSize: 32, lineHeight: scaledLineHeight(40), letterSpacing: -0.6 };
+  },
+  get h2() {
+    return { fontSize: 24, lineHeight: scaledLineHeight(32), letterSpacing: -0.4 };
+  },
+  get h3() {
+    return { fontSize: 20, lineHeight: scaledLineHeight(28), letterSpacing: -0.2 };
+  },
+  get numeric() {
+    return { fontSize: 16, lineHeight: scaledLineHeight(24) };
+  },
+  get numericLarge() {
+    return { fontSize: 32, lineHeight: scaledLineHeight(40), letterSpacing: -0.4 };
+  },
 };
 
 export interface TextProps extends RNTextProps {

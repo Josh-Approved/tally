@@ -8,6 +8,7 @@ import { Text } from '../components/Text';
 import { Hairline } from '../components/Hairline';
 import { CategoryIcon, ICON_NAMES } from '../components/CategoryIcon';
 import { Button } from '../components/Button';
+import { useReducedMotion } from '../components/Dialogs';
 import { useTheme, space, radius } from '../theme';
 import { listCategories, createCategory, updateCategory } from '../data/categories';
 import { t } from '../i18n';
@@ -162,6 +163,7 @@ function CategoryEditor({
   onSaved: () => void;
 }) {
   const { c } = useTheme();
+  const reduceMotion = useReducedMotion();
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('tag');
 
@@ -187,7 +189,13 @@ function CategoryEditor({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      // animationType is a prop, not a hook — nothing else in the app guards it,
+      // so a literal here would slide in regardless of the OS Reduce Motion setting.
+      animationType={reduceMotion ? 'none' : 'slide'}
+      onRequestClose={onClose}
+    >
       <Screen>
         <TopBar
           title={editing ? t('categories.editTitle') : t('categories.newTitle')}
@@ -207,7 +215,7 @@ function CategoryEditor({
               value={name}
               onChangeText={setName}
               placeholder={kind === 'expense' ? t('categories.namePlaceholderExpense') : t('categories.namePlaceholderIncome')}
-              placeholderTextColor={c.fgSubtle}
+              placeholderTextColor={c.fgMuted}
               autoFocus
               style={{
                 borderWidth: 1,
